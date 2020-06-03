@@ -46,7 +46,7 @@ class DefaultStreamWrapper implements FileSystemStreamWrapper
     public function mkdir(string $path, int $mode, int $options): bool
     {
         return (bool)$this->forward($path, __FUNCTION__,
-            [$mode, $options & STREAM_MKDIR_RECURSIVE === STREAM_MKDIR_RECURSIVE]);
+            [$mode, ($options & STREAM_MKDIR_RECURSIVE) === STREAM_MKDIR_RECURSIVE]);
     }
 
     /**
@@ -55,7 +55,7 @@ class DefaultStreamWrapper implements FileSystemStreamWrapper
     public function rmdir(string $path, int $options): bool
     {
         return (bool)$this->forward($path, __FUNCTION__,
-            [$options & STREAM_MKDIR_RECURSIVE === STREAM_MKDIR_RECURSIVE]);
+            [($options & STREAM_MKDIR_RECURSIVE) === STREAM_MKDIR_RECURSIVE]);
     }
 
     /**
@@ -120,7 +120,7 @@ class DefaultStreamWrapper implements FileSystemStreamWrapper
     public function url_stat(string $path, int $flags): ?array
     {
         /** @var Stat|null $stat */
-        $stat = $this->forward($path, 'stat', [$flags & STREAM_URL_STAT_LINK === STREAM_URL_STAT_LINK], null);
+        $stat = $this->forward($path, 'stat', [($flags & STREAM_URL_STAT_LINK) === STREAM_URL_STAT_LINK], null);
         return $stat ? $stat->toArray() : null;
     }
 
