@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,18 +23,17 @@ use Opis\FileSystem\Handler\FileSystemHandler;
 
 class StreamWrapperMountManager extends DefaultMountManager
 {
-    /** @var string */
-    protected $protocol;
 
-    /** @var FileSystemStreamWrapper|string */
-    protected $wrapperClass;
+    protected string $protocol;
+
+    protected string $wrapperClass;
 
     /**
      * @param FileSystemHandler[] $handlers
      * @param string $protocol
      * @param string $wrapper_class
      */
-    public function __construct(array $handlers = [], string $protocol = 'fs', string $wrapper_class = DefaultStreamWrapper::class)
+    public function __construct(iterable $handlers = [], string $protocol = 'fs', string $wrapper_class = DefaultStreamWrapper::class)
     {
         parent::__construct($handlers);
 

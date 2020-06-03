@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,15 +26,15 @@ final class ArrayDirectory implements Directory, ProtocolInfo
     use DirectoryFullPathTrait;
 
     /** @var string */
-    private $path;
+    private string $path;
 
-    /** @var \Opis\FileSystem\File\FileInfo[] */
-    private $items;
+    /** @var FileInfo[] */
+    private ?array $items;
 
     /**
      * ArrayDirectory constructor.
      * @param string $path
-     * @param \Opis\FileSystem\File\FileInfo[]|array $items
+     * @param FileInfo[]|array $items
      */
     public function __construct(string $path, array $items)
     {

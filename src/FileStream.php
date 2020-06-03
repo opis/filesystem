@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,10 @@ use Opis\FileSystem\File\Stat;
 
 class FileStream extends ResourceStream
 {
-    /** @var callable */
+    /** @var callable|null */
     protected $saveHandler = null;
 
-    /** @var null|array */
-    protected $stat = null;
+    protected ?array $stat = null;
 
     /**
      * FileStream constructor.

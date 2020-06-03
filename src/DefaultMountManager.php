@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,13 +27,13 @@ class DefaultMountManager implements MountManager
 {
     use PathTrait;
 
-    /** @var iterable|FileSystemHandler[] */
-    protected $handlers;
+    /** @var FileSystemHandler[] */
+    protected array $handlers = [];
 
     /**
      * @param FileSystemHandler[] $handlers
      */
-    public function __construct(array $handlers = [])
+    public function __construct(iterable $handlers = [])
     {
         foreach ($handlers as $name => $handler) {
             if (is_string($name) && $handler && ($handler instanceof FileSystemHandler)) {

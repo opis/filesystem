@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,20 +28,21 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
 {
     /** @var FileSystemHandler|AccessHandler|SearchHandler|ContextHandler */
     protected $handler;
-    /** @var CacheHandler */
-    protected $cache;
+
+    protected CacheHandler $cache;
+
     /** @var null|ArrayObject|FileInfo[] */
-    protected $data = null;
-    /** @var bool */
-    protected $lazyDirCache = false;
-    /** @var bool */
-    protected $ignoreLinks = true;
-    /** @var bool */
-    protected $isContextHandler = false;
-    /** @var bool */
-    protected $isAccessHandler = false;
-    /** @var bool */
-    protected $isSearchHandler = false;
+    protected ?ArrayObject $data = null;
+
+    protected bool $lazyDirCache = false;
+
+    protected bool $ignoreLinks = true;
+
+    protected bool $isContextHandler = false;
+
+    protected bool $isAccessHandler = false;
+
+    protected bool $isSearchHandler = false;
 
     /**
      * CachedHandler constructor.

@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,8 +32,8 @@ trait PathTrait
         }
 
         if (isset($m[3])) {
-            if ($normalize && ($m[3] = $this->normalizePath($m[3])) === null) {
-                return null;
+            if ($normalize) {
+                $m[3] = $this->normalizePath($m[3]);
             }
         } else {
             $m[3] = '';

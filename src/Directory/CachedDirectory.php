@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,11 @@ final class CachedDirectory implements Directory
 {
     use DirectoryFullPathTrait;
 
-    /** @var \Opis\FileSystem\Directory\Directory */
-    private $directory;
-    /** @var CachedHandler */
-    private $handler;
-    /** @var string */
-    private $path;
+    private ?Directory $directory;
+
+    private ?CachedHandler $handler;
+
+    private string $path;
 
     /**
      * CachedDirectory constructor.

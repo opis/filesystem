@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,11 @@ class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandle
 {
     use SearchTrait;
 
-    /** @var string */
-    protected $root;
-    /** @var string|null */
-    protected $baseUrl;
-    /** @var int */
-    protected $defaultMode = 0777;
+    protected string $root;
+
+    protected ?string $baseUrl = null;
+
+    protected int $defaultMode = 0777;
 
     /**
      * LocalFileHandler constructor.
@@ -88,6 +87,7 @@ class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandle
     public function rmdir(string $path, bool $recursive = true): bool
     {
         $path = $this->fullPath($path);
+
         if (!is_dir($path)) {
             return false;
         }

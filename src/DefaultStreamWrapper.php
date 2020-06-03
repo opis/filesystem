@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ class DefaultStreamWrapper implements FileSystemStreamWrapper
     use StreamMetaTrait, StreamContextTrait, StreamFileTrait, StreamDirectoryTrait, ProtocolTrait;
 
     /** @var FileSystemHandlerManager[] */
-    private static $registered = [];
+    private static array $registered = [];
 
     /**
      * @inheritDoc

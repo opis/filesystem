@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,16 @@
 namespace Opis\FileSystem\Cache;
 
 use ArrayObject;
+use Opis\FileSystem\File\FileInfo;
 
 class MemoryCacheHandler implements CacheHandler
 {
-    /** @var ArrayObject|null */
-    protected $data = null;
+
+    protected ?ArrayObject $data = null;
 
     /**
      * MemoryCacheHandler constructor.
-     * @param \Opis\FileSystem\File\FileInfo[]|null $data
+     * @param FileInfo[]|null $data
      */
     public function __construct(?array $data = null)
     {

@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ use Opis\FileSystem\Context;
 
 trait ContextTrait
 {
-    /** @var null|Context */
-    protected $context = null;
+
+    protected ?Context $context = null;
 
     /**
      * @inheritDoc

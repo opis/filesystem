@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,29 +19,21 @@ namespace Opis\FileSystem;
 
 class Context
 {
-    /** @var array */
-    protected $options;
+    protected array $options;
 
-    /** @var bool */
-    protected $blocking = false;
+    protected bool $blocking = false;
 
-    /** @var int */
-    protected $readTimeout = 0;
+    protected int $readTimeout = 0;
 
-    /** @var int */
-    protected $readMode = STREAM_BUFFER_NONE;
+    protected int $readMode = STREAM_BUFFER_NONE;
 
-    /** @var int */
-    protected $readBuffer = 8192;
+    protected int $readBuffer = 8192;
 
-    /** @var int */
-    protected $writeMode = STREAM_BUFFER_NONE;
+    protected int $writeMode = STREAM_BUFFER_NONE;
 
-    /** @var int */
-    protected $writeBuffer = 8192;
+    protected int $writeBuffer = 8192;
 
-    /** @var string */
-    protected $protocol;
+    protected string $protocol;
 
     /** @var resource|null */
     protected $context = null;

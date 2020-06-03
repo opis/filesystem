@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,5 +30,6 @@ interface SearchHandler
      * @param int|null $limit
      * @return iterable|FileInfo[]
      */
-    public function search(string $path, string $text, ?callable $filter = null, ?array $options = null, ?int $depth = 0, ?int $limit = null): iterable;
+    public function search(string $path, string $text, ?callable $filter = null,
+                           ?array $options = null, ?int $depth = 0, ?int $limit = null): iterable;
 }

@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,10 @@ use Opis\FileSystem\Handler\FileSystemHandler;
 
 final class DefaultStreamPathInfo implements FileSystemStreamPathInfo
 {
-    /** @var FileSystemHandler */
-    private $handler;
 
-    /** @var string */
-    private $path;
+    private FileSystemHandler $handler;
+
+    private string $path;
 
     /**
      * @param FileSystemHandler $handler
