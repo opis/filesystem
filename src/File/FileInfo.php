@@ -68,8 +68,8 @@ class FileInfo implements ProtocolInfo, JsonSerializable
     public function name(): string
     {
         if ($this->name === null) {
-            $this->name = explode('/', $this->path);
-            $this->name = array_pop($this->name);
+            $name = explode('/', $this->path);
+            $this->name = array_pop($name);
         }
 
         return $this->name;
