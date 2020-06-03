@@ -17,12 +17,11 @@
 
 namespace Opis\FileSystem\Traits;
 
-use Opis\Stream\IStream;
+use Opis\Stream\Stream;
 
 trait StreamFileTrait
 {
-    /** @var IStream|null */
-    protected $file = null;
+    protected ?Stream $file = null;
 
     /**
      * @inheritDoc
@@ -137,7 +136,7 @@ trait StreamFileTrait
     /**
      * @param string $path
      * @param string $mode
-     * @return IStream|null
+     * @return Stream|null
      */
-    abstract protected function file(string $path, string $mode): ?IStream;
+    abstract protected function file(string $path, string $mode): ?Stream;
 }

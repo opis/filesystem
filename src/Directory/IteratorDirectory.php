@@ -18,22 +18,22 @@
 namespace Opis\FileSystem\Directory;
 
 use Iterator;
-use Opis\FileSystem\File\IFileInfo;
-use Opis\FileSystem\IProtocolInfo;
+use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\ProtocolInfo;
 use Opis\FileSystem\Traits\DirectoryFullPathTrait;
 
-class IteratorDirectory implements IDirectory, IProtocolInfo
+class IteratorDirectory implements Directory, ProtocolInfo
 {
     use DirectoryFullPathTrait;
 
     /** @var string */
     protected $path;
-    /** @var Iterator|IFileInfo[] */
+    /** @var Iterator|FileInfo[] */
     protected $iterator;
 
     /**
      * @param string $path
-     * @param Iterator|IFileInfo[] $iterator
+     * @param Iterator|FileInfo[] $iterator
      */
     public function __construct(string $path, Iterator $iterator)
     {
@@ -53,7 +53,7 @@ class IteratorDirectory implements IDirectory, IProtocolInfo
     /**
      * @inheritDoc
      */
-    public function doNext(): ?IFileInfo
+    public function doNext(): ?FileInfo
     {
         if ($this->iterator === null || !$this->iterator->valid()) {
             return null;
@@ -63,7 +63,7 @@ class IteratorDirectory implements IDirectory, IProtocolInfo
 
         $this->iterator->next();
 
-        return $next instanceof IFileInfo ? $next : null;
+        return $next instanceof FileInfo ? $next : null;
     }
 
     /**

@@ -17,7 +17,7 @@
 
 namespace Opis\FileSystem\Traits;
 
-use Opis\FileSystem\{Directory\IDirectory, File\IFileInfo};
+use Opis\FileSystem\{Directory\Directory, File\FileInfo};
 
 trait SearchTrait
 {
@@ -50,17 +50,17 @@ trait SearchTrait
     }
 
     /**
-     * @param IDirectory $dir
+     * @param Directory $dir
      * @param string $text
      * @param callable|null $filter
      * @param array|null $options
      * @param int $depth
      * @param int $max
-     * @return iterable|IFileInfo[]
+     * @return iterable|FileInfo[]
      */
-    protected function doSearch(IDirectory $dir, string $text, ?callable $filter = null, ?array $options = null, int $depth = PHP_INT_MAX, int &$max = PHP_INT_MAX): iterable
+    protected function doSearch(Directory $dir, string $text, ?callable $filter = null, ?array $options = null, int $depth = PHP_INT_MAX, int &$max = PHP_INT_MAX): iterable
     {
-        /** @var IFileInfo[] $to_check */
+        /** @var FileInfo[] $to_check */
         $to_check = [];
 
         while ($item = $dir->next()) {
@@ -100,5 +100,5 @@ trait SearchTrait
     /**
      * @inheritdoc
      */
-    abstract public function dir(string $path): ?IDirectory;
+    abstract public function dir(string $path): ?Directory;
 }

@@ -17,10 +17,10 @@
 
 namespace Opis\FileSystem;
 
-use Opis\Stream\Stream;
+use Opis\Stream\ResourceStream;
 use Opis\FileSystem\File\Stat;
 
-class FileStream extends Stream
+class FileStream extends ResourceStream
 {
     /** @var callable */
     protected $saveHandler = null;

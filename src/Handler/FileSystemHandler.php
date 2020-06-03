@@ -17,19 +17,19 @@
 
 namespace Opis\FileSystem\Handler;
 
-use Opis\Stream\IStream;
-use Opis\FileSystem\Directory\IDirectory;
-use Opis\FileSystem\File\{IFileInfo, Stat};
+use Opis\Stream\Stream;
+use Opis\FileSystem\Directory\Directory;
+use Opis\FileSystem\File\{FileInfo, Stat};
 
-interface IFileSystemHandler
+interface FileSystemHandler
 {
     /**
      * @param string $path
      * @param int $mode
      * @param bool $recursive
-     * @return null|IFileInfo
+     * @return null|FileInfo
      */
-    public function mkdir(string $path, int $mode = 0777, bool $recursive = true): ?IFileInfo;
+    public function mkdir(string $path, int $mode = 0777, bool $recursive = true): ?FileInfo;
 
     /**
      * @param string $path
@@ -47,17 +47,17 @@ interface IFileSystemHandler
     /**
      * @param string $from
      * @param string $to
-     * @return null|IFileInfo
+     * @return null|FileInfo
      */
-    public function rename(string $from, string $to): ?IFileInfo;
+    public function rename(string $from, string $to): ?FileInfo;
 
     /**
      * @param string $from
      * @param string $to
      * @param bool $overwrite
-     * @return null|IFileInfo
+     * @return null|FileInfo
      */
-    public function copy(string $from, string $to, bool $overwrite = true): ?IFileInfo;
+    public function copy(string $from, string $to, bool $overwrite = true): ?FileInfo;
 
     /**
      * @param string $path
@@ -68,28 +68,28 @@ interface IFileSystemHandler
 
     /**
      * @param string $path
-     * @param IStream $stream
+     * @param Stream $stream
      * @param int $mode
-     * @return null|IFileInfo
+     * @return null|FileInfo
      */
-    public function write(string $path, IStream $stream, int $mode = 0777): ?IFileInfo;
+    public function write(string $path, Stream $stream, int $mode = 0777): ?FileInfo;
 
     /**
      * @param string $path
      * @param string $mode
-     * @return IStream|null
+     * @return Stream|null
      */
-    public function file(string $path, string $mode = 'rb'): ?IStream;
+    public function file(string $path, string $mode = 'rb'): ?Stream;
 
     /**
      * @param string $path
-     * @return IDirectory|null
+     * @return Directory|null
      */
-    public function dir(string $path): ?IDirectory;
+    public function dir(string $path): ?Directory;
 
     /**
      * @param string $path
-     * @return IFileInfo|null
+     * @return FileInfo|null
      */
-    public function info(string $path): ?IFileInfo;
+    public function info(string $path): ?FileInfo;
 }

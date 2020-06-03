@@ -19,7 +19,7 @@ namespace Opis\FileSystem\Cache;
 
 use ArrayObject;
 
-abstract class AbstractCacheHandler implements ICacheHandler
+abstract class BaseCacheHandler implements CacheHandler
 {
     /** @var null|ArrayObject */
     protected $data = null;

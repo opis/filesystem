@@ -17,7 +17,7 @@
 
 namespace Opis\FileSystem\Traits;
 
-use Opis\FileSystem\IProtocolInfo;
+use Opis\FileSystem\ProtocolInfo;
 
 trait FullPathTrait
 {
@@ -35,7 +35,7 @@ trait FullPathTrait
      * @inheritDoc
      * @return self
      */
-    public function setProtocol(?string $protocol): IProtocolInfo
+    public function setProtocol(?string $protocol): ProtocolInfo
     {
         $this->protocol = $protocol;
 

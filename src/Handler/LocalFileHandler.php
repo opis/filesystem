@@ -18,13 +18,13 @@
 namespace Opis\FileSystem\Handler;
 
 use RecursiveDirectoryIterator, RecursiveIteratorIterator, FilesystemIterator;
-use Opis\Stream\{IStream, Printer\CopyPrinter};
+use Opis\Stream\{Stream, Printer\CopyPrinter};
 use Opis\FileSystem\FileStream;
 use Opis\FileSystem\Traits\SearchTrait;
-use Opis\FileSystem\File\{IFileInfo, FileInfo, Stat};
-use Opis\FileSystem\Directory\{IDirectory, LocalDirectory};
+use Opis\FileSystem\File\{FileInfo, Stat};
+use Opis\FileSystem\Directory\{Directory, LocalDirectory};
 
-class LocalFileHandler implements IFileSystemHandler, IAccessHandler, ISearchHandler
+class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandler
 {
     use SearchTrait;
 
@@ -70,7 +70,7 @@ class LocalFileHandler implements IFileSystemHandler, IAccessHandler, ISearchHan
     /**
      * @inheritDoc
      */
-    public function mkdir(string $path, int $mode = 0777, bool $recursive = true): ?IFileInfo
+    public function mkdir(string $path, int $mode = 0777, bool $recursive = true): ?FileInfo
     {
         $fullPath = $this->fullPath($path);
         if (is_dir($fullPath)) {
@@ -123,7 +123,7 @@ class LocalFileHandler implements IFileSystemHandler, IAccessHandler, ISearchHan
     /**
      * @inheritDoc
      */
-    public function touch(string $path, int $time, ?int $atime = null): ?IFileInfo
+    public function touch(string $path, int $time, ?int $atime = null): ?FileInfo
     {
         if (!$this->ensureDir($path, $this->defaultMode)) {
             return null;
@@ -139,7 +139,7 @@ class LocalFileHandler implements IFileSystemHandler, IAccessHandler, ISearchHan
     /**
      * @inheritDoc
      */
-    public function chmod(string $path, int $mode): ?IFileInfo
+    public function chmod(string $path, int $mode): ?FileInfo
     {
         if (!@chmod($this->fullPath($path), $mode)) {
             return null;
@@ -150,7 +150,7 @@ class LocalFileHandler implements IFileSystemHandler, IAccessHandler, ISearchHan
     /**
      * @inheritDoc
      */
-    public function chown(string $path, string $owner): ?IFileInfo
+    public function chown(string $path, string $owner): ?FileInfo
     {
         if (!@chown($this->fullPath($path), $owner)) {
             return null;
@@ -161,7 +161,7 @@ class LocalFileHandler implements IFileSystemHandler, IAccessHandler, ISearchHan
     /**
      * @inheritDoc
      */
-    public function chgrp(string $path, string $group): ?IFileInfo
+    public function chgrp(string $path, string $group): ?FileInfo
     {
         if (!@chgrp($this->fullPath($path), $group)) {
             return null;
@@ -172,7 +172,7 @@ class LocalFileHandler implements IFileSystemHandler, IAccessHandler, ISearchHan
     /**
      * @inheritDoc
      */
-    public function rename(string $from, string $to): ?IFileInfo
+    public function rename(string $from, string $to): ?FileInfo
     {
         if ($from === $to) {
             return null;
@@ -186,7 +186,7 @@ class LocalFileHandler implements IFileSystemHandler, IAccessHandler, ISearchHan
     /**
      * @inheritDoc
      */
-    public function copy(string $from, string $to, bool $overwrite = true): ?IFileInfo
+    public function copy(string $from, string $to, bool $overwrite = true): ?FileInfo
     {
         $from = trim($from, ' /');
         $to = trim($to, ' /');
@@ -261,7 +261,7 @@ class LocalFileHandler implements IFileSystemHandler, IAccessHandler, ISearchHan
     /**
      * @inheritDoc
      */
-    public function write(string $path, IStream $stream, int $mode = 0777): ?IFileInfo
+    public function write(string $path, Stream $stream, int $mode = 0777): ?FileInfo
     {
         if ($stream->size() === 0 && $stream->isEOF()) {
             $now = time();
@@ -287,7 +287,7 @@ class LocalFileHandler implements IFileSystemHandler, IAccessHandler, ISearchHan
     /**
      * @inheritDoc
      */
-    public function file(string $path, string $mode = 'rb'): ?IStream
+    public function file(string $path, string $mode = 'rb'): ?Stream
     {
         if ($stat = $this->stat($path)) {
             if ($stat->isDir()) {
@@ -309,7 +309,7 @@ class LocalFileHandler implements IFileSystemHandler, IAccessHandler, ISearchHan
     /**
      * @inheritDoc
      */
-    public function dir(string $path): ?IDirectory
+    public function dir(string $path): ?Directory
     {
         $stat = $this->stat($path);
         if (!$stat || !$stat->isDir()) {
@@ -321,7 +321,7 @@ class LocalFileHandler implements IFileSystemHandler, IAccessHandler, ISearchHan
     /**
      * @inheritDoc
      */
-    public function info(string $path): ?IFileInfo
+    public function info(string $path): ?FileInfo
     {
         $path = trim($path, ' /');
         if ($path === '') {
@@ -374,10 +374,10 @@ class LocalFileHandler implements IFileSystemHandler, IAccessHandler, ISearchHan
 
     /**
      * @param string $path
-     * @param IStream $stream
+     * @param Stream $stream
      * @return bool
      */
-    protected function writeFile(string $path, IStream $stream): bool
+    protected function writeFile(string $path, Stream $stream): bool
     {
         $path = $this->fullPath($path);
 

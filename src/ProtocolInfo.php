@@ -17,12 +17,16 @@
 
 namespace Opis\FileSystem;
 
-interface IFileSystemHandlerManager
+interface ProtocolInfo
 {
     /**
-     * @param string $path
-     * @param string $protocol
-     * @return IFileSystemStreamPathInfo|null
+     * @return string|null
      */
-    public function handle(string $path, string $protocol): ?IFileSystemStreamPathInfo;
+    public function protocol(): ?string;
+
+    /**
+     * @param string|null $protocol
+     * @return ProtocolInfo|static
+     */
+    public function setProtocol(?string $protocol): self;
 }

@@ -15,38 +15,25 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\Handler;
+namespace Opis\FileSystem\Cache;
 
-use Opis\FileSystem\File\IFileInfo;
+use ArrayObject;
 
-interface IAccessHandler
+interface CacheHandler
 {
     /**
-     * @param string $path
-     * @param int $time
-     * @param int|null $atime
-     * @return null|IFileInfo
+     * @return ArrayObject|null
      */
-    public function touch(string $path, int $time, ?int $atime = null): ?IFileInfo;
+    public function load(): ?ArrayObject;
 
     /**
-     * @param string $path
-     * @param int $mode
-     * @return null|IFileInfo
+     * @param ArrayObject $data
+     * @return bool
      */
-    public function chmod(string $path, int $mode): ?IFileInfo;
+    public function save(ArrayObject $data): bool;
 
     /**
-     * @param string $path
-     * @param string $owner
-     * @return null|IFileInfo
+     * @return bool
      */
-    public function chown(string $path, string $owner): ?IFileInfo;
-
-    /**
-     * @param string $path
-     * @param string $group
-     * @return null|IFileInfo
-     */
-    public function chgrp(string $path, string $group): ?IFileInfo;
+    public function commit(): bool;
 }

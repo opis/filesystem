@@ -19,7 +19,7 @@ namespace Opis\FileSystem\Handler;
 
 use Opis\FileSystem\Context;
 
-interface IContextHandler
+interface ContextHandler
 {
     /**
      * @param null|Context $context

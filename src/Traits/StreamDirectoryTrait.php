@@ -17,11 +17,11 @@
 
 namespace Opis\FileSystem\Traits;
 
-use Opis\FileSystem\Directory\IDirectory;
+use Opis\FileSystem\Directory\Directory;
 
 trait StreamDirectoryTrait
 {
-    /** @var IDirectory|null */
+    /** @var Directory|null */
     protected $dir = null;
 
     /**
@@ -85,7 +85,7 @@ trait StreamDirectoryTrait
 
     /**
      * @param string $path
-     * @return IDirectory|null
+     * @return Directory|null
      */
-    abstract protected function dir(string $path): ?IDirectory;
+    abstract protected function dir(string $path): ?Directory;
 }

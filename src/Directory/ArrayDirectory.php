@@ -17,24 +17,24 @@
 
 namespace Opis\FileSystem\Directory;
 
-use Opis\FileSystem\File\IFileInfo;
-use Opis\FileSystem\IProtocolInfo;
+use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\ProtocolInfo;
 use Opis\FileSystem\Traits\DirectoryFullPathTrait;
 
-final class ArrayDirectory implements IDirectory, IProtocolInfo
+final class ArrayDirectory implements Directory, ProtocolInfo
 {
     use DirectoryFullPathTrait;
 
     /** @var string */
     private $path;
 
-    /** @var \Opis\FileSystem\File\IFileInfo[] */
+    /** @var \Opis\FileSystem\File\FileInfo[] */
     private $items;
 
     /**
      * ArrayDirectory constructor.
      * @param string $path
-     * @param \Opis\FileSystem\File\IFileInfo[]|array $items
+     * @param \Opis\FileSystem\File\FileInfo[]|array $items
      */
     public function __construct(string $path, array $items)
     {
@@ -54,7 +54,7 @@ final class ArrayDirectory implements IDirectory, IProtocolInfo
     /**
      * @inheritDoc
      */
-    public function doNext(): ?IFileInfo
+    public function doNext(): ?FileInfo
     {
         if ($this->items === null) {
             return null;
@@ -63,7 +63,7 @@ final class ArrayDirectory implements IDirectory, IProtocolInfo
         $next = current($this->items);
         next($this->items);
 
-        return $next instanceof IFileInfo ? $next : null;
+        return $next instanceof FileInfo ? $next : null;
     }
 
     /**

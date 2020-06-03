@@ -19,14 +19,14 @@ namespace Opis\FileSystem\Cache;
 
 use ArrayObject;
 
-class MemoryCacheHandler implements ICacheHandler
+class MemoryCacheHandler implements CacheHandler
 {
     /** @var ArrayObject|null */
     protected $data = null;
 
     /**
      * MemoryCacheHandler constructor.
-     * @param \Opis\FileSystem\File\IFileInfo[]|null $data
+     * @param \Opis\FileSystem\File\FileInfo[]|null $data
      */
     public function __construct(?array $data = null)
     {

@@ -15,36 +15,20 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\Directory;
+namespace Opis\FileSystem\Handler;
 
-use Opis\FileSystem\File\IFileInfo;
+use Opis\FileSystem\File\FileInfo;
 
-interface IDirectory
+interface SearchHandler
 {
     /**
-     * @return string
+     * @param string $path
+     * @param string $text
+     * @param callable|null $filter
+     * @param array|null $options
+     * @param int|null $depth
+     * @param int|null $limit
+     * @return iterable|FileInfo[]
      */
-    public function path(): string;
-
-    /**
-     * @return string
-     */
-    public function fullPath(): string;
-
-    /**
-     * Next item in directory
-     * @return IFileInfo|null
-     */
-    public function next(): ?IFileInfo;
-
-    /**
-     * Goes back to first item
-     * @return bool
-     */
-    public function rewind(): bool;
-
-    /**
-     * Closes the handle
-     */
-    public function close(): void;
+    public function search(string $path, string $text, ?callable $filter = null, ?array $options = null, ?int $depth = 0, ?int $limit = null): iterable;
 }

@@ -18,28 +18,28 @@
 namespace Opis\FileSystem;
 
 use RuntimeException;
-use Opis\FileSystem\File\IFileInfo;
-use Opis\FileSystem\Handler\IFileSystemHandler;
+use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\Handler\FileSystemHandler;
 
-class StreamWrapperMountManager extends MountManager
+class StreamWrapperMountManager extends DefaultMountManager
 {
     /** @var string */
     protected $protocol;
 
-    /** @var IFileSystemStreamWrapper|string */
+    /** @var FileSystemStreamWrapper|string */
     protected $wrapperClass;
 
     /**
-     * @param IFileSystemHandler[] $handlers
+     * @param FileSystemHandler[] $handlers
      * @param string $protocol
      * @param string $wrapper_class
      */
-    public function __construct(array $handlers = [], string $protocol = 'fs', string $wrapper_class = FileSystemStreamWrapper::class)
+    public function __construct(array $handlers = [], string $protocol = 'fs', string $wrapper_class = DefaultStreamWrapper::class)
     {
         parent::__construct($handlers);
 
-        /** @var IFileSystemStreamWrapper $wrapper_class */
-        if (!is_subclass_of($wrapper_class, IFileSystemStreamWrapper::class, true)) {
+        /** @var FileSystemStreamWrapper $wrapper_class */
+        if (!is_subclass_of($wrapper_class, FileSystemStreamWrapper::class, true)) {
             throw new RuntimeException('Invalid wrapper class ' . $wrapper_class);
         }
 
@@ -70,7 +70,7 @@ class StreamWrapperMountManager extends MountManager
     /**
      * @inheritDoc
      */
-    public function rename(string $from, string $to): ?IFileInfo
+    public function rename(string $from, string $to): ?FileInfo
     {
         if (strpos($from, '://') === false) {
             return null;
@@ -83,19 +83,19 @@ class StreamWrapperMountManager extends MountManager
             }
         }
 
-        list($proto_from, $from) = explode('://', $from, 2);
+        [$proto_from, $from] = explode('://', $from, 2);
         $handler_from = $this->handler($proto_from);
         if ($handler_from === null) {
             return null;
         }
         $from = $this->normalizePath($from);
 
-        list($proto_to, $to) = explode('://', $to, 2);
+        [$proto_to, $to] = explode('://', $to, 2);
         $to = $this->normalizePath($to);
 
         if ($proto_from === $proto_to) {
             $info = $handler_from->rename($from, $to);
-            if ($info instanceof IProtocolInfo) {
+            if ($info instanceof ProtocolInfo) {
                 $info->setProtocol($proto_to);
             }
             return $info;
@@ -114,7 +114,7 @@ class StreamWrapperMountManager extends MountManager
     /**
      * @inheritDoc
      */
-    public function copy(string $from, string $to, bool $overwrite = true): ?IFileInfo
+    public function copy(string $from, string $to, bool $overwrite = true): ?FileInfo
     {
         if (strpos($from, '://') === false) {
             return null;
@@ -127,19 +127,19 @@ class StreamWrapperMountManager extends MountManager
             }
         }
 
-        list($proto_from, $from) = explode('://', $from, 2);
+        [$proto_from, $from] = explode('://', $from, 2);
         $handler_from = $this->handler($proto_from);
         if ($handler_from === null) {
             return null;
         }
         $from = $this->normalizePath($from);
 
-        list($proto_to, $to) = explode('://', $to, 2);
+        [$proto_to, $to] = explode('://', $to, 2);
         $to = $this->normalizePath($to);
 
         if ($proto_from === $proto_to) {
             $info = $handler_from->copy($from, $to, $overwrite);
-            if ($info instanceof IProtocolInfo) {
+            if ($info instanceof ProtocolInfo) {
                 $info->setProtocol($proto_to);
             }
             return $info;

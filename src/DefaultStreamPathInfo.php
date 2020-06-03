@@ -17,17 +17,39 @@
 
 namespace Opis\FileSystem;
 
-use Opis\FileSystem\Handler\IFileSystemHandler;
+use Opis\FileSystem\Handler\FileSystemHandler;
 
-interface IFileSystemStreamPathInfo
+final class DefaultStreamPathInfo implements FileSystemStreamPathInfo
 {
-    /**
-     * @return IFileSystemHandler
-     */
-    public function handler(): IFileSystemHandler;
+    /** @var FileSystemHandler */
+    private $handler;
+
+    /** @var string */
+    private $path;
 
     /**
-     * @return string
+     * @param FileSystemHandler $handler
+     * @param string $path
      */
-    public function path(): string;
+    public function __construct(FileSystemHandler $handler, string $path)
+    {
+        $this->handler = $handler;
+        $this->path = $path;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function handler(): FileSystemHandler
+    {
+        return $this->handler;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function path(): string
+    {
+        return $this->path;
+    }
 }

@@ -15,20 +15,14 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\Handler;
+namespace Opis\FileSystem;
 
-use Opis\FileSystem\File\IFileInfo;
-
-interface ISearchHandler
+interface FileSystemHandlerManager
 {
     /**
      * @param string $path
-     * @param string $text
-     * @param callable|null $filter
-     * @param array|null $options
-     * @param int|null $depth
-     * @param int|null $limit
-     * @return iterable|IFileInfo[]
+     * @param string $protocol
+     * @return FileSystemStreamPathInfo|null
      */
-    public function search(string $path, string $text, ?callable $filter = null, ?array $options = null, ?int $depth = 0, ?int $limit = null): iterable;
+    public function handle(string $path, string $protocol): ?FileSystemStreamPathInfo;
 }

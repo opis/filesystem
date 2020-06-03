@@ -17,12 +17,12 @@
 
 namespace Opis\FileSystem\File;
 
-use Serializable, JsonSerializable;
+use JsonSerializable;
 
-class Stat implements Serializable, JsonSerializable
+class Stat implements JsonSerializable
 {
     /** @var array|int[] */
-    protected $info;
+    protected array $info;
 
     /**
      * Stat constructor.
@@ -210,19 +210,13 @@ class Stat implements Serializable, JsonSerializable
         return $this->toArray(false);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function serialize()
+    public function __serialize(): array
     {
-        return serialize($this->toArray(false));
+        return $this->toArray(false);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function unserialize($serialized)
+    public function __unserialize(array $data): void
     {
-        $this->info = unserialize($serialized) ?? [];
+        $this->info = $data;
     }
 }

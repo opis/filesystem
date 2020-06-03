@@ -17,25 +17,20 @@
 
 namespace Opis\FileSystem\File;
 
-use Opis\FileSystem\IProtocolInfo;
+use JsonSerializable;
+use Opis\FileSystem\ProtocolInfo;
 use Opis\FileSystem\Traits\FullPathTrait;
 
-class FileInfo implements IFileInfo, IProtocolInfo
+class FileInfo implements ProtocolInfo, JsonSerializable
 {
     use FullPathTrait;
 
-    /** @var string */
-    protected $path;
-    /** @var null|string */
-    protected $name = null;
-    /** @var Stat */
-    protected $stat;
-    /** @var null|string */
-    protected $mime;
-    /** @var null|string */
-    protected $url;
-    /** @var null|array */
-    protected $metadata = null;
+    private string $path;
+    private ?string $name = null;
+    private Stat $stat;
+    protected ?string $mime ;
+    protected ?string $url;
+    protected ?array $metadata ;
 
     /**
      * @param string $path
@@ -110,41 +105,6 @@ class FileInfo implements IFileInfo, IProtocolInfo
     public function metadata(): ?array
     {
         return $this->metadata;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function serialize()
-    {
-        $data = ['path' => $this->path, 'stat' => $this->stat];
-
-        if ($this->mime !== null) {
-            $data['mime'] = $this->mime;
-        }
-
-        if ($this->url !== null) {
-            $data['url'] = $this->url;
-        }
-
-        if ($this->metadata) {
-            $data['metadata'] = $this->metadata;
-        }
-
-        return serialize($data);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function unserialize($serialized)
-    {
-        $serialized = unserialize($serialized);
-        $this->path = $serialized['path'] ?? null;
-        $this->mime = $serialized['mime'] ?? null;
-        $this->url = $serialized['url'] ?? null;
-        $this->metadata = $serialized['metadata'] ?? null;
-        $this->stat = $serialized['stat'] ?? null;
     }
 
     /**

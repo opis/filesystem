@@ -17,17 +17,17 @@
 
 namespace Opis\FileSystem\Directory;
 
-use Opis\FileSystem\File\IFileInfo;
-use Opis\FileSystem\Handler\IFileSystemHandler;
+use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\Handler\FileSystemHandler;
 use Opis\FileSystem\Traits\DirectoryFullPathTrait;
 
-class LocalDirectory implements IDirectory
+class LocalDirectory implements Directory
 {
     use DirectoryFullPathTrait;
 
     /** @var resource|null|bool */
     protected $dir = false;
-    /** @var \Opis\FileSystem\Handler\IFileSystemHandler */
+    /** @var \Opis\FileSystem\Handler\FileSystemHandler */
     protected $fs;
     /** @var string */
     protected $path;
@@ -36,11 +36,11 @@ class LocalDirectory implements IDirectory
 
     /**
      * LocalDirectory constructor.
-     * @param IFileSystemHandler $handler
+     * @param FileSystemHandler $handler
      * @param string $path
      * @param string $root
      */
-    public function __construct(IFileSystemHandler $handler, string $path, string $root = '')
+    public function __construct(FileSystemHandler $handler, string $path, string $root = '')
     {
         $this->fs = $handler;
         $this->path = $path;
@@ -58,7 +58,7 @@ class LocalDirectory implements IDirectory
     /**
      * @inheritDoc
      */
-    public function doNext(): ?IFileInfo
+    public function doNext(): ?FileInfo
     {
         if ($this->dir === false) {
             $this->dir = @opendir($this->root . $this->path);
