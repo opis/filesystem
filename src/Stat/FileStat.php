@@ -15,16 +15,18 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\File;
+namespace Opis\FileSystem\Stat;
 
-final class LinkStat extends Stat
+use Opis\FileSystem\Stat;
+
+final class FileStat extends Stat
 {
     /**
      * @inheritDoc
      */
-    public function __construct(int $mode, int $size = 0, ?int $time = null, array $info = [])
+    public function __construct(int $mode, int $size, ?int $time = null, array $info = [])
     {
-        $info['mode'] = $mode | 0xA000;
+        $info['mode'] = $mode | 0x8000;
         $info['size'] = $size;
         $info['atime'] = $info['ctime'] = $info['mtime'] = $time;
         parent::__construct($info);

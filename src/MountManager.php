@@ -19,8 +19,6 @@ namespace Opis\FileSystem;
 
 use Opis\Stream\Stream;
 use Opis\FileSystem\Traits\PathTrait;
-use Opis\FileSystem\Directory\Directory;
-use Opis\FileSystem\File\{FileInfo, Stat};
 use Opis\FileSystem\Handler\{AccessHandler, FileSystemHandler, SearchHandler};
 
 class MountManager implements FileSystemHandlerManager, FileSystemHandler, AccessHandler, SearchHandler

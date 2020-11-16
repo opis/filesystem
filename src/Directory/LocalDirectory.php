@@ -17,7 +17,7 @@
 
 namespace Opis\FileSystem\Directory;
 
-use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\{Directory, FileInfo};
 use Opis\FileSystem\Handler\FileSystemHandler;
 use Opis\FileSystem\Traits\DirectoryFullPathTrait;
 

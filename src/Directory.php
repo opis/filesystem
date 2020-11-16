@@ -15,25 +15,34 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\Cache;
+namespace Opis\FileSystem;
 
-use ArrayObject;
-
-interface ICacheHandler
+interface Directory
 {
     /**
-     * @return ArrayObject|null
+     * @return string
      */
-    public function load(): ?ArrayObject;
+    public function path(): string;
 
     /**
-     * @param ArrayObject $data
-     * @return bool
+     * @return string
      */
-    public function save(ArrayObject $data): bool;
+    public function fullPath(): string;
 
     /**
+     * Next item in directory
+     * @return FileInfo|null
+     */
+    public function next(): ?FileInfo;
+
+    /**
+     * Goes back to first item
      * @return bool
      */
-    public function commit(): bool;
+    public function rewind(): bool;
+
+    /**
+     * Closes the handle
+     */
+    public function close(): void;
 }

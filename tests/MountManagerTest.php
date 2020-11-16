@@ -17,7 +17,7 @@
 
 namespace Opis\FileSystem\Test;
 
-use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\FileInfo;
 use Opis\FileSystem\Handler\LocalFileHandler;
 use Opis\FileSystem\MountManager;
 use Opis\Stream\PHPDataStream;

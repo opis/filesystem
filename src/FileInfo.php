@@ -15,9 +15,8 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\File;
+namespace Opis\FileSystem;
 
-use Opis\FileSystem\ProtocolInfo;
 use Opis\FileSystem\Traits\FullPathTrait;
 
 class FileInfo implements ProtocolInfo

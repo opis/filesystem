@@ -19,8 +19,8 @@ namespace Opis\FileSystem\Test;
 
 use Opis\Stream\Stream;
 use PHPUnit\Framework\TestCase;
-use Opis\FileSystem\File\FileInfo;
-use Opis\FileSystem\Directory\Directory;
+use Opis\FileSystem\FileInfo;
+use Opis\FileSystem\Directory;
 use Opis\FileSystem\Handler\{FileSystemHandler, SearchHandler};
 
 abstract class AbstractHandler extends TestCase

@@ -20,7 +20,10 @@ namespace Opis\FileSystem\Traits;
 trait StreamMetaTrait
 {
     /**
-     * @inheritdoc
+     * @param string $path
+     * @param int $option
+     * @param null $value
+     * @return bool
      */
     public function stream_metadata(string $path, int $option, $value = null): bool
     {

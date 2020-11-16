@@ -17,7 +17,6 @@
 
 namespace Opis\FileSystem;
 
-use Opis\FileSystem\File\Stat;
 use Opis\Stream\ResourceStream;
 
 class FileStream extends ResourceStream

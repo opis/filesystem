@@ -18,12 +18,11 @@
 namespace Opis\FileSystem\Handler;
 
 use Throwable;
-use RecursiveDirectoryIterator, RecursiveIteratorIterator, FilesystemIterator;
-use Opis\Stream\{Stream, Printer\CopyPrinter};
-use Opis\FileSystem\FileStream;
 use Opis\FileSystem\Traits\SearchTrait;
-use Opis\FileSystem\File\{FileInfo, Stat};
-use Opis\FileSystem\Directory\{Directory, LocalDirectory};
+use Opis\Stream\{Stream, Printer\CopyPrinter};
+use Opis\FileSystem\Directory\LocalDirectory;
+use Opis\FileSystem\{Directory, FileInfo, FileStream, Stat};
+use RecursiveDirectoryIterator, RecursiveIteratorIterator, FilesystemIterator;
 
 class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandler
 {
