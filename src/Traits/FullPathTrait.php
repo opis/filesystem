@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
 
 namespace Opis\FileSystem\Traits;
 
-use Opis\FileSystem\IProtocolInfo;
+use Opis\FileSystem\ProtocolInfo;
 
 trait FullPathTrait
 {
-    protected $protocol = null;
+    protected ?string $protocol = null;
 
     /**
      * @inheritDoc
@@ -35,7 +35,7 @@ trait FullPathTrait
      * @inheritDoc
      * @return self
      */
-    public function setProtocol(?string $protocol): IProtocolInfo
+    public function setProtocol(?string $protocol): ProtocolInfo
     {
         $this->protocol = $protocol;
 
@@ -43,7 +43,7 @@ trait FullPathTrait
     }
 
     /**
-     * @inheritdoc
+     * @return string
      */
     public function fullPath(): string
     {

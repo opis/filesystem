@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,36 +17,19 @@
 
 namespace Opis\FileSystem\Handler;
 
-use Opis\FileSystem\File\IFileInfo;
+use Opis\FileSystem\File\FileInfo;
 
-interface IAccessHandler
+interface SearchHandler
 {
     /**
      * @param string $path
-     * @param int $time
-     * @param int|null $atime
-     * @return null|IFileInfo
+     * @param string $text
+     * @param callable|null $filter
+     * @param array|null $options
+     * @param int|null $depth
+     * @param int|null $limit
+     * @return iterable|FileInfo[]
      */
-    public function touch(string $path, int $time, ?int $atime = null): ?IFileInfo;
-
-    /**
-     * @param string $path
-     * @param int $mode
-     * @return null|IFileInfo
-     */
-    public function chmod(string $path, int $mode): ?IFileInfo;
-
-    /**
-     * @param string $path
-     * @param string $owner
-     * @return null|IFileInfo
-     */
-    public function chown(string $path, string $owner): ?IFileInfo;
-
-    /**
-     * @param string $path
-     * @param string $group
-     * @return null|IFileInfo
-     */
-    public function chgrp(string $path, string $group): ?IFileInfo;
+    public function search(string $path, string $text, ?callable $filter = null,
+        ?array $options = null, ?int $depth = 0, ?int $limit = null): iterable;
 }

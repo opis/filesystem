@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,26 +17,26 @@
 
 namespace Opis\FileSystem;
 
-use Opis\Stream\IStream;
+use Opis\Stream\Stream;
 use Opis\FileSystem\Traits\PathTrait;
-use Opis\FileSystem\Directory\IDirectory;
-use Opis\FileSystem\File\{IFileInfo, Stat};
-use Opis\FileSystem\Handler\{IAccessHandler, IFileSystemHandler, ISearchHandler};
+use Opis\FileSystem\Directory\Directory;
+use Opis\FileSystem\File\{FileInfo, Stat};
+use Opis\FileSystem\Handler\{AccessHandler, FileSystemHandler, SearchHandler};
 
-class MountManager implements IMountManager
+class MountManager implements FileSystemHandlerManager, FileSystemHandler, AccessHandler, SearchHandler
 {
     use PathTrait;
 
-    /** @var iterable|IFileSystemHandler[] */
-    protected $handlers;
+    /** @var array|FileSystemHandler[] */
+    protected array $handlers = [];
 
     /**
-     * @param IFileSystemHandler[] $handlers
+     * @param FileSystemHandler[] $handlers
      */
     public function __construct(array $handlers = [])
     {
         foreach ($handlers as $name => $handler) {
-            if (is_string($name) && $handler && ($handler instanceof IFileSystemHandler)) {
+            if (is_string($name) && $handler && ($handler instanceof FileSystemHandler)) {
                 $this->mount($name, $handler);
             }
         }
@@ -45,7 +45,7 @@ class MountManager implements IMountManager
     /**
      * @inheritDoc
      */
-    public function handle(string $path, string $protocol): ?IFileSystemStreamPathInfo
+    public function handle(string $path, string $protocol): ?FileSystemStreamPathInfo
     {
         $path = $this->parsePath($path, $protocol);
         if ($path === null) {
@@ -61,10 +61,10 @@ class MountManager implements IMountManager
 
     /**
      * @param string $name
-     * @param IFileSystemHandler $handler
+     * @param FileSystemHandler $handler
      * @return bool
      */
-    public function mount(string $name, IFileSystemHandler $handler): bool
+    public function mount(string $name, FileSystemHandler $handler): bool
     {
         $this->handlers[$name] = $handler;
 
@@ -86,15 +86,16 @@ class MountManager implements IMountManager
     }
 
     /**
-     * @inheritDoc
+     * @param string $name
+     * @return FileSystemHandler|null
      */
-    public function handler(string $name): ?IFileSystemHandler
+    public function handler(string $name): ?FileSystemHandler
     {
         return $this->handlers[$name] ?? null;
     }
 
     /**
-     * @inheritDoc
+     * @return iterable|FileSystemHandler[]
      */
     public function handlers(): iterable
     {
@@ -104,7 +105,7 @@ class MountManager implements IMountManager
     /**
      * @inheritDoc
      */
-    public function mkdir(string $path, int $mode = 0777, bool $recursive = true): ?IFileInfo
+    public function mkdir(string $path, int $mode = 0777, bool $recursive = true): ?FileInfo
     {
         return $this->forward($path, __FUNCTION__, [$mode, $recursive]);
     }
@@ -128,7 +129,7 @@ class MountManager implements IMountManager
     /**
      * @inheritDoc
      */
-    public function touch(string $path, int $time, ?int $atime = null): ?IFileInfo
+    public function touch(string $path, int $time, ?int $atime = null): ?FileInfo
     {
         return $this->forward($path, __FUNCTION__, [$time, $atime], null, false, true);
     }
@@ -136,7 +137,7 @@ class MountManager implements IMountManager
     /**
      * @inheritDoc
      */
-    public function chmod(string $path, int $mode): ?IFileInfo
+    public function chmod(string $path, int $mode): ?FileInfo
     {
         return $this->forward($path, __FUNCTION__, [$mode], null, false, true);
     }
@@ -144,7 +145,7 @@ class MountManager implements IMountManager
     /**
      * @inheritDoc
      */
-    public function chown(string $path, string $owner): ?IFileInfo
+    public function chown(string $path, string $owner): ?FileInfo
     {
         return $this->forward($path, __FUNCTION__, [$owner], null, false, true);
     }
@@ -152,7 +153,7 @@ class MountManager implements IMountManager
     /**
      * @inheritDoc
      */
-    public function chgrp(string $path, string $group): ?IFileInfo
+    public function chgrp(string $path, string $group): ?FileInfo
     {
         return $this->forward($path, __FUNCTION__, [$group], null, false, true);
     }
@@ -168,7 +169,7 @@ class MountManager implements IMountManager
     /**
      * @inheritDoc
      */
-    public function write(string $path, IStream $stream, int $mode = 0777): ?IFileInfo
+    public function write(string $path, Stream $stream, int $mode = 0777): ?FileInfo
     {
         return $this->forward($path, __FUNCTION__, [$stream, $mode]);
     }
@@ -176,7 +177,7 @@ class MountManager implements IMountManager
     /**
      * @inheritDoc
      */
-    public function file(string $path, string $mode = 'rb'): ?IStream
+    public function file(string $path, string $mode = 'rb'): ?Stream
     {
         return $this->forward($path, __FUNCTION__, [$mode], null);
     }
@@ -184,7 +185,7 @@ class MountManager implements IMountManager
     /**
      * @inheritDoc
      */
-    public function dir(string $path): ?IDirectory
+    public function dir(string $path): ?Directory
     {
         return $this->forward($path, __FUNCTION__, [], null, true);
     }
@@ -192,13 +193,14 @@ class MountManager implements IMountManager
     /**
      * @inheritDoc
      */
-    public function info(string $path): ?IFileInfo
+    public function info(string $path): ?FileInfo
     {
         return $this->forward($path, __FUNCTION__, [], null, true);
     }
 
     /**
-     * @inheritDoc
+     * @param string $path
+     * @return bool
      */
     public function exists(string $path): bool
     {
@@ -206,7 +208,8 @@ class MountManager implements IMountManager
     }
 
     /**
-     * @inheritDoc
+     * @param string $path
+     * @return bool
      */
     public function isFile(string $path): bool
     {
@@ -217,7 +220,8 @@ class MountManager implements IMountManager
     }
 
     /**
-     * @inheritDoc
+     * @param string $path
+     * @return bool
      */
     public function isDir(string $path): bool
     {
@@ -229,7 +233,8 @@ class MountManager implements IMountManager
     }
 
     /**
-     * @inheritDoc
+     * @param string $path
+     * @return bool
      */
     public function isLink(string $path): bool
     {
@@ -243,7 +248,7 @@ class MountManager implements IMountManager
     /**
      * @inheritDoc
      */
-    public function rename(string $from, string $to): ?IFileInfo
+    public function rename(string $from, string $to): ?FileInfo
     {
         if (strpos($from, '://') === false) {
             return null;
@@ -256,19 +261,19 @@ class MountManager implements IMountManager
             }
         }
 
-        list($proto_from, $from) = explode('://', $from, 2);
+        [$proto_from, $from] = explode('://', $from, 2);
         $handler_from = $this->handler($proto_from);
         if ($handler_from === null) {
             return null;
         }
         $from = $this->normalizePath($from);
 
-        list($proto_to, $to) = explode('://', $to, 2);
+        [$proto_to, $to] = explode('://', $to, 2);
         $to = $this->normalizePath($to);
 
         if ($proto_from === $proto_to) {
             $info = $handler_from->rename($from, $to);
-            if ($info instanceof IProtocolInfo) {
+            if ($info instanceof ProtocolInfo) {
                 $info->setProtocol($proto_to);
             }
             return $info;
@@ -279,7 +284,7 @@ class MountManager implements IMountManager
             return null;
         }
 
-        /** @var IFileInfo $from_info */
+        /** @var FileInfo $from_info */
         $from_info = $this->info($proto_from . '://' . $from);
 
         if ($from_info === null) {
@@ -302,7 +307,7 @@ class MountManager implements IMountManager
     /**
      * @inheritDoc
      */
-    public function copy(string $from, string $to, bool $overwrite = true): ?IFileInfo
+    public function copy(string $from, string $to, bool $overwrite = true): ?FileInfo
     {
         if (strpos($from, '://') === false) {
             return null;
@@ -315,19 +320,19 @@ class MountManager implements IMountManager
             }
         }
 
-        list($proto_from, $from) = explode('://', $from, 2);
+        [$proto_from, $from] = explode('://', $from, 2);
         $handler_from = $this->handler($proto_from);
         if ($handler_from === null) {
             return null;
         }
         $from = $this->normalizePath($from);
 
-        list($proto_to, $to) = explode('://', $to, 2);
+        [$proto_to, $to] = explode('://', $to, 2);
         $to = $this->normalizePath($to);
 
         if ($proto_from === $proto_to) {
             $info = $handler_from->copy($from, $to, $overwrite);
-            if ($info instanceof IProtocolInfo) {
+            if ($info instanceof ProtocolInfo) {
                 $info->setProtocol($proto_to);
             }
             return $info;
@@ -338,7 +343,7 @@ class MountManager implements IMountManager
             return null;
         }
 
-        /** @var IFileInfo $from_info */
+        /** @var FileInfo $from_info */
         $from_info = $this->info($proto_from . '://' . $from);
 
         if ($from_info === null) {
@@ -368,17 +373,17 @@ class MountManager implements IMountManager
             return [];
         }
 
-        list($protocol, $path) = explode('://', $path, 2);
+        [$protocol, $path] = explode('://', $path, 2);
 
         $handler = $this->handler($protocol);
-        if ($handler === null || !($handler instanceof ISearchHandler)) {
+        if ($handler === null || !($handler instanceof SearchHandler)) {
             return [];
         }
 
         $path = $this->normalizePath($path);
 
         foreach ($handler->search($path, $text, $filter, $options, $depth, $limit) as $item) {
-            if ($item instanceof IProtocolInfo) {
+            if ($item instanceof ProtocolInfo) {
                 $item->setProtocol($protocol);
             }
 
@@ -387,7 +392,12 @@ class MountManager implements IMountManager
     }
 
     /**
-     * @inheritDoc
+     * @param string $from
+     * @param string $to
+     * @param bool $recursive
+     * @param bool $overwrite
+     * @param callable|null $filter
+     * @return int|null
      */
     public function copyFiltered(
         string $from,
@@ -408,7 +418,7 @@ class MountManager implements IMountManager
             }
         }
 
-        list($proto_from, $from) = explode('://', $from, 2);
+        [$proto_from, $from] = explode('://', $from, 2);
         $handler_from = $this->handler($proto_from);
         if ($handler_from === null) {
             return null;
@@ -420,7 +430,7 @@ class MountManager implements IMountManager
             return null;
         }
 
-        list($proto_to, $to) = explode('://', $to, 2);
+        [$proto_to, $to] = explode('://', $to, 2);
         $to = $this->normalizePath($to);
 
         if ($proto_from === $proto_to) {
@@ -438,7 +448,10 @@ class MountManager implements IMountManager
     }
 
     /**
-     * @inheritDoc
+     * @param string $source
+     * @param string $replica
+     * @param callable|null $filter
+     * @return int|null
      */
     public function sync(string $source, string $replica, ?callable $filter = null): ?int
     {
@@ -453,7 +466,7 @@ class MountManager implements IMountManager
             }
         }
 
-        list($proto_source, $source) = explode('://', $source, 2);
+        [$proto_source, $source] = explode('://', $source, 2);
         $handler_source = $this->handler($proto_source);
         if ($handler_source === null) {
             return null;
@@ -466,7 +479,7 @@ class MountManager implements IMountManager
             return null;
         }
 
-        list($proto_replica, $replica) = explode('://', $replica, 2);
+        [$proto_replica, $replica] = explode('://', $replica, 2);
         $replica = $this->normalizePath($replica);
 
         if ($proto_source === $proto_replica) {
@@ -481,7 +494,7 @@ class MountManager implements IMountManager
         unset($source, $proto_source, $proto_replica);
 
         if (!$filter) {
-            $filter = static function (IFileInfo $source, IFileInfo $replica): bool {
+            $filter = static function (FileInfo $source, FileInfo $replica): bool {
                 $sStat = $source->stat();
                 $rStat = $replica->stat();
 
@@ -507,7 +520,7 @@ class MountManager implements IMountManager
             return null;
         }
 
-        list($handler, $path) = explode('://', $path, 2);
+        [$handler, $path] = explode('://', $path, 2);
 
         $path = $this->normalizePath($path);
 
@@ -552,7 +565,7 @@ class MountManager implements IMountManager
             return null;
         }
 
-        list($proto, $base) = explode('://', $base, 2);
+        [$proto, $base] = explode('://', $base, 2);
 
         if ($path === '') {
             return $absolute ? $this->absolutePath($base, $protocol) : $proto . '://' . $this->normalizePath($base);
@@ -596,9 +609,9 @@ class MountManager implements IMountManager
     }
 
     /**
-     * @param IFileSystemHandler $from
-     * @param IFileInfo $from_info
-     * @param IFileSystemHandler $to
+     * @param FileSystemHandler $from
+     * @param FileInfo $from_info
+     * @param FileSystemHandler $to
      * @param string $to_path
      * @param bool $recursive
      * @param bool $overwrite
@@ -606,7 +619,7 @@ class MountManager implements IMountManager
      * @param callable|null $overwrite_filter
      * @return int
      */
-    protected function doCopy(IFileSystemHandler $from, IFileInfo $from_info, IFileSystemHandler $to, string $to_path, bool $recursive, bool $overwrite, ?callable $filter = null, ?callable $overwrite_filter = null): int
+    protected function doCopy(FileSystemHandler $from, FileInfo $from_info, FileSystemHandler $to, string $to_path, bool $recursive, bool $overwrite, ?callable $filter = null, ?callable $overwrite_filter = null): int
     {
         if ($filter && !$filter($from_info)) {
             return 0;
@@ -694,14 +707,14 @@ class MountManager implements IMountManager
             return $failure;
         }
 
-        list($protocol, $path) = explode('://', $path, 2);
+        [$protocol, $path] = explode('://', $path, 2);
 
         $handler = $this->handler($protocol);
         if ($handler === null) {
             return $failure;
         }
 
-        if ($access && !($handler instanceof IAccessHandler)) {
+        if ($access && !($handler instanceof AccessHandler)) {
             return $failure;
         }
 
@@ -715,7 +728,7 @@ class MountManager implements IMountManager
 
         $ret = $handler->{$method}(...$args);
 
-        if ($ret instanceof IProtocolInfo) {
+        if ($ret instanceof ProtocolInfo) {
             $ret->setProtocol($protocol);
         }
 

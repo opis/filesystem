@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,22 @@
 
 namespace Opis\FileSystem\Traits;
 
-use Opis\FileSystem\{Directory\IDirectory, File\IFileInfo};
+use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\Directory\Directory;
 
 trait SearchTrait
 {
     /**
      * @inheritdoc
      */
-    public function search(string $path, string $text, ?callable $filter = null, ?array $options = null, ?int $depth = 0, ?int $limit = null): iterable
-    {
+    public function search(
+        string $path,
+        string $text,
+        ?callable $filter = null,
+        ?array $options = null,
+        ?int $depth = 0,
+        ?int $limit = null
+    ): iterable {
         $path = $this->dir(trim($path, ' /'));
 
         if ($path === null) {
@@ -50,17 +57,23 @@ trait SearchTrait
     }
 
     /**
-     * @param IDirectory $dir
+     * @param Directory $dir
      * @param string $text
      * @param callable|null $filter
      * @param array|null $options
      * @param int $depth
      * @param int $max
-     * @return iterable|IFileInfo[]
+     * @return iterable|FileInfo[]
      */
-    protected function doSearch(IDirectory $dir, string $text, ?callable $filter = null, ?array $options = null, int $depth = PHP_INT_MAX, int &$max = PHP_INT_MAX): iterable
-    {
-        /** @var IFileInfo[] $to_check */
+    protected function doSearch(
+        Directory $dir,
+        string $text,
+        ?callable $filter = null,
+        ?array $options = null,
+        int $depth = PHP_INT_MAX,
+        int &$max = PHP_INT_MAX
+    ): iterable {
+        /** @var FileInfo[] $to_check */
         $to_check = [];
 
         while ($item = $dir->next()) {
@@ -100,5 +113,5 @@ trait SearchTrait
     /**
      * @inheritdoc
      */
-    abstract public function dir(string $path): ?IDirectory;
+    abstract public function dir(string $path): ?Directory;
 }

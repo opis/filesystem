@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@
 
 namespace Opis\FileSystem\File;
 
-use Serializable, JsonSerializable;
+use JsonSerializable;
 
-class Stat implements Serializable, JsonSerializable
+class Stat implements JsonSerializable
 {
     /** @var array|int[] */
-    protected $info;
+    protected array $info;
 
     /**
      * Stat constructor.
@@ -202,27 +202,18 @@ class Stat implements Serializable, JsonSerializable
         return $indexed ? array_merge(array_values($stat), $stat) : $stat;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function jsonSerialize()
     {
         return $this->toArray(false);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function serialize()
+    public function __serialize(): array
     {
-        return serialize($this->toArray(false));
+        return $this->toArray(false);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function unserialize($serialized)
+    public function __unserialize(array $data): void
     {
-        $this->info = unserialize($serialized) ?? [];
+        $this->info = $data;
     }
 }

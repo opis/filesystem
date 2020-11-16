@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 
 namespace Opis\FileSystem\Traits;
 
-use Opis\FileSystem\IProtocolInfo;
-use Opis\FileSystem\File\IFileInfo;
+use Opis\FileSystem\ProtocolInfo;
+use Opis\FileSystem\File\FileInfo;
 
 trait DirectoryFullPathTrait
 {
@@ -27,11 +27,11 @@ trait DirectoryFullPathTrait
     /**
      * @inheritdoc
      */
-    public function next(): ?IFileInfo
+    public function next(): ?FileInfo
     {
         $next = $this->doNext();
 
-        if ($next && ($next instanceof IProtocolInfo)) {
+        if ($next && ($next instanceof ProtocolInfo)) {
             $next->setProtocol($this->protocol);
         }
 
@@ -39,7 +39,7 @@ trait DirectoryFullPathTrait
     }
 
     /**
-     * @return IFileInfo|null
+     * @return FileInfo|null
      */
-    abstract protected function doNext(): ?IFileInfo;
+    abstract protected function doNext(): ?FileInfo;
 }

@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,7 @@ trait StreamContextTrait
     /** @var resource|null */
     public $context = null;
 
-    /** @var Context|null */
-    protected $contextOptions = null;
+    protected ?Context $contextOptions = null;
 
     /**
      * @inheritdoc

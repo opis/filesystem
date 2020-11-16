@@ -15,49 +15,38 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\File;
+namespace Opis\FileSystem\Handler;
 
-use Serializable, JsonSerializable;
+use Opis\FileSystem\File\FileInfo;
 
-interface IFileInfo extends Serializable, JsonSerializable
+interface AccessHandler
 {
     /**
-     * @return Stat
+     * @param string $path
+     * @param int $time
+     * @param int|null $atime
+     * @return null|FileInfo
      */
-    public function stat(): Stat;
+    public function touch(string $path, int $time, ?int $atime = null): ?FileInfo;
 
     /**
-     * File/Dir name
-     * @return string
+     * @param string $path
+     * @param int $mode
+     * @return null|FileInfo
      */
-    public function name(): string;
+    public function chmod(string $path, int $mode): ?FileInfo;
 
     /**
-     * Path
-     * @return string
+     * @param string $path
+     * @param string $owner
+     * @return null|FileInfo
      */
-    public function path(): string;
+    public function chown(string $path, string $owner): ?FileInfo;
 
     /**
-     * @return string
+     * @param string $path
+     * @param string $group
+     * @return null|FileInfo
      */
-    public function fullPath(): string;
-
-    /**
-     * Content type
-     * @return string|null
-     */
-    public function mime(): ?string;
-
-    /**
-     * Public URL
-     * @return string|null
-     */
-    public function url(): ?string;
-
-    /**
-     * Metadata
-     * @return array|null
-     */
-    public function metadata(): ?array;
+    public function chgrp(string $path, string $group): ?FileInfo;
 }

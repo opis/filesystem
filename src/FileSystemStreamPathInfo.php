@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,18 @@
 
 namespace Opis\FileSystem;
 
-use Opis\FileSystem\Handler\IFileSystemHandler;
+use Opis\FileSystem\Handler\FileSystemHandler;
 
-final class FileSystemStreamPathInfo implements IFileSystemStreamPathInfo
+final class FileSystemStreamPathInfo
 {
-    /** @var IFileSystemHandler */
-    private $handler;
-
-    /** @var string */
-    private $path;
+    private string $path;
+    private FileSystemHandler $handler;
 
     /**
-     * @param IFileSystemHandler $handler
+     * @param FileSystemHandler $handler
      * @param string $path
      */
-    public function __construct(IFileSystemHandler $handler, string $path)
+    public function __construct(FileSystemHandler $handler, string $path)
     {
         $this->handler = $handler;
         $this->path = $path;
@@ -40,7 +37,7 @@ final class FileSystemStreamPathInfo implements IFileSystemStreamPathInfo
     /**
      * @inheritDoc
      */
-    public function handler(): IFileSystemHandler
+    public function handler(): FileSystemHandler
     {
         return $this->handler;
     }

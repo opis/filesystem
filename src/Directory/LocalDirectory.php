@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,30 +17,28 @@
 
 namespace Opis\FileSystem\Directory;
 
-use Opis\FileSystem\File\IFileInfo;
-use Opis\FileSystem\Handler\IFileSystemHandler;
+use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\Handler\FileSystemHandler;
 use Opis\FileSystem\Traits\DirectoryFullPathTrait;
 
-class LocalDirectory implements IDirectory
+class LocalDirectory implements Directory
 {
     use DirectoryFullPathTrait;
 
     /** @var resource|null|bool */
     protected $dir = false;
-    /** @var \Opis\FileSystem\Handler\IFileSystemHandler */
-    protected $fs;
-    /** @var string */
-    protected $path;
-    /** @var string */
-    protected $root;
+
+    protected FileSystemHandler $fs;
+    protected string $path;
+    protected string $root;
 
     /**
      * LocalDirectory constructor.
-     * @param IFileSystemHandler $handler
+     * @param FileSystemHandler $handler
      * @param string $path
      * @param string $root
      */
-    public function __construct(IFileSystemHandler $handler, string $path, string $root = '')
+    public function __construct(FileSystemHandler $handler, string $path, string $root = '')
     {
         $this->fs = $handler;
         $this->path = $path;
@@ -58,7 +56,7 @@ class LocalDirectory implements IDirectory
     /**
      * @inheritDoc
      */
-    public function doNext(): ?IFileInfo
+    public function doNext(): ?FileInfo
     {
         if ($this->dir === false) {
             $this->dir = @opendir($this->root . $this->path);
@@ -109,9 +107,6 @@ class LocalDirectory implements IDirectory
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function __destruct()
     {
         $this->close();

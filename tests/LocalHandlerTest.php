@@ -18,14 +18,14 @@
 namespace Opis\FileSystem\Test;
 
 use Opis\FileSystem\Handler\CachedHandler;
-use Opis\FileSystem\Handler\IFileSystemHandler;
+use Opis\FileSystem\Handler\FileSystemHandler;
 use Opis\FileSystem\Handler\LocalFileHandler;
 
 class LocalHandlerTest extends AbstractHandler
 {
     use FilesTrait;
 
-    public static function handler(): IFileSystemHandler
+    public static function handler(): FileSystemHandler
     {
         return new LocalFileHandler(self::copyFiles(__DIR__ . '/files/local', __DIR__ . '/files'));
     }
@@ -33,7 +33,7 @@ class LocalHandlerTest extends AbstractHandler
     /**
      * @inheritDoc
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         /** @var LocalFileHandler $h */
         $h = static::$handler;

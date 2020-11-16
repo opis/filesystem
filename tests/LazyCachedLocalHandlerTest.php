@@ -18,11 +18,11 @@
 namespace Opis\FileSystem\Test;
 
 use Opis\FileSystem\Handler\CachedHandler;
-use Opis\FileSystem\Handler\IFileSystemHandler;
+use Opis\FileSystem\Handler\FileSystemHandler;
 
 class LazyCachedLocalHandlerTest extends LocalHandlerTest
 {
-    public static function handler(): IFileSystemHandler
+    public static function handler(): FileSystemHandler
     {
         return new CachedHandler(parent::handler(), null, true);
     }

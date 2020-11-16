@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019 Zindex Software
+ * Copyright 2019-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +17,19 @@
 
 namespace Opis\FileSystem\File;
 
-use Opis\FileSystem\IProtocolInfo;
+use Opis\FileSystem\ProtocolInfo;
 use Opis\FileSystem\Traits\FullPathTrait;
 
-class FileInfo implements IFileInfo, IProtocolInfo
+class FileInfo implements ProtocolInfo
 {
     use FullPathTrait;
 
-    /** @var string */
-    protected $path;
-    /** @var null|string */
-    protected $name = null;
-    /** @var Stat */
-    protected $stat;
-    /** @var null|string */
-    protected $mime;
-    /** @var null|string */
-    protected $url;
-    /** @var null|array */
-    protected $metadata = null;
+    protected string $path;
+    protected ?string $name = null;
+    protected Stat $stat;
+    protected ?string $mime = null;
+    protected ?string $url = null;
+    protected ?array $metadata = null;
 
     /**
      * @param string $path
@@ -60,7 +54,7 @@ class FileInfo implements IFileInfo, IProtocolInfo
     }
 
     /**
-     * @inheritDoc
+     * @return Stat
      */
     public function stat(): Stat
     {
@@ -68,20 +62,22 @@ class FileInfo implements IFileInfo, IProtocolInfo
     }
 
     /**
-     * @inheritDoc
+     * File/Dir name
+     * @return string
      */
     public function name(): string
     {
         if ($this->name === null) {
-            $this->name = explode('/', $this->path);
-            $this->name = array_pop($this->name);
+            $name = explode('/', $this->path);
+            $this->name = array_pop($name);
         }
 
         return $this->name;
     }
 
     /**
-     * @inheritDoc
+     * Path
+     * @return string
      */
     public function path(): string
     {
@@ -89,7 +85,8 @@ class FileInfo implements IFileInfo, IProtocolInfo
     }
 
     /**
-     * @inheritDoc
+     * Content type
+     * @return string|null
      */
     public function mime(): ?string
     {
@@ -97,7 +94,8 @@ class FileInfo implements IFileInfo, IProtocolInfo
     }
 
     /**
-     * @inheritDoc
+     * Public URL
+     * @return string|null
      */
     public function url(): ?string
     {
@@ -105,19 +103,20 @@ class FileInfo implements IFileInfo, IProtocolInfo
     }
 
     /**
-     * @inheritDoc
+     * Metadata
+     * @return array|null
      */
     public function metadata(): ?array
     {
         return $this->metadata;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function serialize()
+    public function __serialize(): array
     {
-        $data = ['path' => $this->path, 'stat' => $this->stat];
+        $data = [
+            'path' => $this->path,
+            'stat' => $this->stat,
+        ];
 
         if ($this->mime !== null) {
             $data['mime'] = $this->mime;
@@ -131,25 +130,18 @@ class FileInfo implements IFileInfo, IProtocolInfo
             $data['metadata'] = $this->metadata;
         }
 
-        return serialize($data);
+        return $data;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function unserialize($serialized)
+    public function __unserialize(array $data): void
     {
-        $serialized = unserialize($serialized);
-        $this->path = $serialized['path'] ?? null;
-        $this->mime = $serialized['mime'] ?? null;
-        $this->url = $serialized['url'] ?? null;
-        $this->metadata = $serialized['metadata'] ?? null;
-        $this->stat = $serialized['stat'] ?? null;
+        $this->path = $data['path'];
+        $this->stat = $data['stat'];
+        $this->mime = $data['mime'] ?? null;
+        $this->url = $data['url'] ?? null;
+        $this->metadata = $data['metadata'] ?? null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function jsonSerialize()
     {
         return [

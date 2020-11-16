@@ -15,13 +15,13 @@
         }
     ],
     "require": {
-        "opis/stream": "^1.1",
+        "opis/stream": "2020.x-dev",
         "ext-json": "*",
         "ext-fileinfo": "*",
-        "php": "^7.1"
+        "php": "^7.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.0"
+        "phpunit/phpunit": "^9.0"
     },
     "autoload": {
         "psr-4": {
