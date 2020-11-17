@@ -17,10 +17,9 @@
 
 namespace Opis\FileSystem\Test\Directory;
 
-use Opis\FileSystem\FileInfo;
 use PHPUnit\Framework\TestCase;
 use Opis\FileSystem\Directory\ArrayDirectory;
-use Opis\FileSystem\Stat\{DirectoryStat, FileStat};
+use Opis\FileSystem\File\{DirectoryStat, FileInfo, FileStat};
 
 class ArrayDirectoryTest extends TestCase
 {

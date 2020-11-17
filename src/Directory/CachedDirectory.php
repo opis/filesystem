@@ -17,9 +17,10 @@
 
 namespace Opis\FileSystem\Directory;
 
+use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\ProtocolInfo;
 use Opis\FileSystem\Handler\CachedHandler;
 use Opis\FileSystem\Traits\DirectoryFullPathTrait;
-use Opis\FileSystem\{Directory, FileInfo, ProtocolInfo};
 
 final class CachedDirectory implements Directory
 {

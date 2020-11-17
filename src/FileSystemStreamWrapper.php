@@ -20,6 +20,8 @@ namespace Opis\FileSystem;
 use Opis\Stream\{
     Stream, StreamWrapper
 };
+use Opis\FileSystem\File\Stat;
+use Opis\FileSystem\Directory\Directory;
 use Opis\FileSystem\Handler\{
     AccessHandler,
     ContextHandler,

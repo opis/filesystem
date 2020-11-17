@@ -17,7 +17,7 @@
 
 namespace Opis\FileSystem\Handler;
 
-use Opis\FileSystem\FileInfo;
+use Opis\FileSystem\File\FileInfo;
 
 interface SearchHandler
 {

@@ -23,10 +23,6 @@ trait ContextHandlerTrait
 {
     protected ?Context $context = null;
 
-    /**
-     * @param Context|null $context
-     * @return bool
-     */
     public function setContext(?Context $context): bool
     {
         $this->context = $context;
@@ -34,9 +30,6 @@ trait ContextHandlerTrait
         return true;
     }
 
-    /**
-     * @return Context|null
-     */
     public function getContext(): ?Context
     {
         return $this->context;

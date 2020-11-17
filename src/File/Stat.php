@@ -15,7 +15,7 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem;
+namespace Opis\FileSystem\File;
 
 use JsonSerializable;
 

@@ -17,7 +17,8 @@
 
 namespace Opis\FileSystem\Traits;
 
-use Opis\FileSystem\{FileInfo, Directory};
+use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\Directory\Directory;
 
 trait SearchTrait
 {
@@ -56,13 +57,13 @@ trait SearchTrait
     }
 
     /**
-     * @param \Opis\FileSystem\Directory $dir
+     * @param Directory $dir
      * @param string $text
      * @param callable|null $filter
      * @param array|null $options
      * @param int $depth
      * @param int $max
-     * @return iterable|\Opis\FileSystem\FileInfo[]
+     * @return iterable|FileInfo[]
      */
     protected function doSearch(
         Directory $dir,

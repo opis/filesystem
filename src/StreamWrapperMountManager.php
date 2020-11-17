@@ -18,6 +18,7 @@
 namespace Opis\FileSystem;
 
 use RuntimeException;
+use Opis\FileSystem\File\FileInfo;
 use Opis\FileSystem\Handler\FileSystemHandler;
 
 class StreamWrapperMountManager extends MountManager

@@ -15,12 +15,11 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\CacheHandler;
+namespace Opis\FileSystem\Cache;
 
 use ArrayObject;
-use Opis\FileSystem\CacheHandler;
 
-abstract class AbstractCacheHandler implements CacheHandler
+abstract class AbstractCacheHandler implements ICacheHandler
 {
     protected ?ArrayObject $data = null;
     protected bool $autoCommit = true;

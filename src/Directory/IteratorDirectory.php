@@ -18,8 +18,9 @@
 namespace Opis\FileSystem\Directory;
 
 use Iterator;
+use Opis\FileSystem\ProtocolInfo;
+use Opis\FileSystem\File\FileInfo;
 use Opis\FileSystem\Traits\DirectoryFullPathTrait;
-use Opis\FileSystem\{Directory, ProtocolInfo, FileInfo};
 
 class IteratorDirectory implements Directory, ProtocolInfo
 {

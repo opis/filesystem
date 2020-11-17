@@ -17,7 +17,7 @@
 
 namespace Opis\FileSystem\Traits;
 
-use Opis\FileSystem\Directory;
+use Opis\FileSystem\Directory\Directory;
 
 trait StreamDirectoryTrait
 {

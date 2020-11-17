@@ -17,7 +17,7 @@
 
 namespace Opis\FileSystem\Handler;
 
-use Opis\FileSystem\FileInfo;
+use Opis\FileSystem\File\FileInfo;
 
 interface AccessHandler
 {
@@ -32,7 +32,7 @@ interface AccessHandler
     /**
      * @param string $path
      * @param int $mode
-     * @return null|\Opis\FileSystem\FileInfo
+     * @return null|FileInfo
      */
     public function chmod(string $path, int $mode): ?FileInfo;
 
