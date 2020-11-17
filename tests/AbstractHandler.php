@@ -17,11 +17,11 @@
 
 namespace Opis\FileSystem\Test;
 
-use Opis\Stream\Stream;
+use Opis\Stream\IStream;
 use PHPUnit\Framework\TestCase;
-use Opis\FileSystem\File\FileInfo;
-use Opis\FileSystem\Directory\Directory;
-use Opis\FileSystem\Handler\{FileSystemHandler, SearchHandler};
+use Opis\FileSystem\File\IFileInfo;
+use Opis\FileSystem\Directory\IDirectory;
+use Opis\FileSystem\Handler\{IFileSystemHandler, ISearchHandler};
 
 abstract class AbstractHandler extends TestCase
 {
@@ -30,17 +30,17 @@ abstract class AbstractHandler extends TestCase
     /**
      * @inheritDoc
      */
-    public static function setUpBeforeClass(): void
+    public static function setUpBeforeClass()
     {
         self::$handler = static::handler();
     }
 
-    abstract public static function handler(): FileSystemHandler;
+    abstract public static function handler(): IFileSystemHandler;
 
     /**
-     * @return FileSystemHandler|SearchHandler
+     * @return IFileSystemHandler|ISearchHandler
      */
-    protected function h(): FileSystemHandler
+    protected function h(): IFileSystemHandler
     {
         return self::$handler;
     }
@@ -70,7 +70,7 @@ abstract class AbstractHandler extends TestCase
 
 
         $r = $this->h()->copy('file1.txt', 'file1-copy.txt', false);
-        $this->assertInstanceOf(FileInfo::class, $r);
+        $this->assertInstanceOf(IFileInfo::class, $r);
         $this->assertEquals('file1-copy.txt', $r->name());
         $this->assertTrue($r->stat()->isFile());
         $this->assertEquals(14, $r->stat()->size());
@@ -87,14 +87,14 @@ abstract class AbstractHandler extends TestCase
         $this->assertNull($r);
 
         $r = $this->h()->copy('dir', 'dir-copy', false);
-        $this->assertInstanceOf(FileInfo::class, $r);
+        $this->assertInstanceOf(IFileInfo::class, $r);
         $this->assertEquals('dir-copy', $r->name());
         $this->assertTrue($r->stat()->isDir());
 
         $items = ['append.txt', 'dir-file1.txt'];
 
         $dir = $this->h()->dir('dir-copy');
-        $this->assertInstanceOf(Directory::class, $dir);
+        $this->assertInstanceOf(IDirectory::class, $dir);
 
         $items2 = [];
         while ($item = $dir->next()) {
@@ -114,7 +114,7 @@ abstract class AbstractHandler extends TestCase
     public function testCopySubDirs()
     {
         $r = $this->h()->copy('dir2', 'dir-new-sub1');
-        $this->assertInstanceOf(FileInfo::class, $r);
+        $this->assertInstanceOf(IFileInfo::class, $r);
         $this->assertEquals('dir-new-sub1', $r->name());
 
         $dir_source = $this->h()->dir('dir2');
@@ -122,7 +122,7 @@ abstract class AbstractHandler extends TestCase
 
         while ($item = $dir_source->next()) {
             $item2 = $dir_copy->next();
-            $this->assertInstanceOf(FileInfo::class, $item2);
+            $this->assertInstanceOf(IFileInfo::class, $item2);
             $this->assertEquals($item->name(), $item2->name());
             $this->assertEquals($item->stat()->mode(), $item2->stat()->mode());
         }
@@ -139,18 +139,18 @@ abstract class AbstractHandler extends TestCase
         $this->assertNull($this->h()->mkdir('dir/sub-dir/test', 0777, false));
 
         $r = $this->h()->mkdir('my-dir');
-        $this->assertInstanceOf(FileInfo::class, $r);
+        $this->assertInstanceOf(IFileInfo::class, $r);
         $this->assertTrue($r->stat()->isDir());
         $this->assertEquals('my-dir', $r->name());
-        $this->assertInstanceOf(Directory::class, $this->h()->dir('my-dir'));
+        $this->assertInstanceOf(IDirectory::class, $this->h()->dir('my-dir'));
         $this->assertTrue($this->h()->rmdir('my-dir'));
 
         $r = $this->h()->mkdir('dir/sub-dir/test');
-        $this->assertInstanceOf(FileInfo::class, $r);
+        $this->assertInstanceOf(IFileInfo::class, $r);
         $this->assertEquals('test', $r->name());
         $this->assertTrue($r->stat()->isDir());
-        $this->assertInstanceOf(Directory::class, $this->h()->dir('dir/sub-dir'));
-        $this->assertInstanceOf(Directory::class, $this->h()->dir('dir/sub-dir/test'));
+        $this->assertInstanceOf(IDirectory::class, $this->h()->dir('dir/sub-dir'));
+        $this->assertInstanceOf(IDirectory::class, $this->h()->dir('dir/sub-dir/test'));
 
         $this->assertTrue($this->h()->rmdir('dir/sub-dir'));
     }
@@ -169,7 +169,7 @@ abstract class AbstractHandler extends TestCase
     public function testFileWrite()
     {
         $f = $this->h()->file('inexistent', 'wb');
-        $this->assertInstanceOf(Stream::class, $f);
+        $this->assertInstanceOf(IStream::class, $f);
         $f->write('some content');
         $f->flush();
         $f->close();
@@ -177,6 +177,7 @@ abstract class AbstractHandler extends TestCase
         $this->assertEquals('some content', $this->h()->file('inexistent'));
 
         $this->assertTrue($this->h()->unlink('inexistent'));
+
 
         $f = $this->h()->file('dir/append.txt', 'a+');
 
@@ -199,7 +200,7 @@ abstract class AbstractHandler extends TestCase
 
     public function testSearch()
     {
-        $filter = function (FileInfo $f) {
+        $filter = function (IFileInfo $f) {
             return $f->stat()->isFile();
         };
 

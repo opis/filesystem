@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019-2020 Zindex Software
+ * Copyright 2019 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,31 +17,34 @@
 
 namespace Opis\FileSystem\Directory;
 
-use Opis\FileSystem\File\FileInfo;
-use Opis\FileSystem\ProtocolInfo;
+use Opis\FileSystem\File\IFileInfo;
 use Opis\FileSystem\Handler\CachedHandler;
+use Opis\FileSystem\IProtocolInfo;
 use Opis\FileSystem\Traits\DirectoryFullPathTrait;
 
-final class CachedDirectory implements Directory
+final class CachedDirectory implements IDirectory
 {
     use DirectoryFullPathTrait;
 
-    private string $path;
-    private ?Directory $directory;
-    private ?CachedHandler $handler;
+    /** @var \Opis\FileSystem\Directory\IDirectory */
+    private $directory;
+    /** @var CachedHandler */
+    private $handler;
+    /** @var string */
+    private $path;
 
     /**
      * CachedDirectory constructor.
-     * @param Directory $directory
+     * @param IDirectory $directory
      * @param CachedHandler $handler
      */
-    public function __construct(Directory $directory, CachedHandler $handler)
+    public function __construct(IDirectory $directory, CachedHandler $handler)
     {
         $this->directory = $directory;
         $this->handler = $handler;
         $this->path = $directory->path();
 
-        if ($directory instanceof ProtocolInfo) {
+        if ($directory instanceof IProtocolInfo) {
             $this->protocol = $directory->protocol();
         }
     }
@@ -57,7 +60,7 @@ final class CachedDirectory implements Directory
     /**
      * @inheritDoc
      */
-    public function doNext(): ?FileInfo
+    public function doNext(): ?IFileInfo
     {
         if ($this->directory === null) {
             return null;

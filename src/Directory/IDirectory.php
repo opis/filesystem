@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019-2020 Zindex Software
+ * Copyright 2019 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,36 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem;
+namespace Opis\FileSystem\Directory;
 
-interface FileSystemHandlerManager
+use Opis\FileSystem\File\IFileInfo;
+
+interface IDirectory
 {
     /**
-     * @param string $path
-     * @param string $protocol
-     * @return FileSystemStreamPathInfo|null
+     * @return string
      */
-    public function handle(string $path, string $protocol): ?FileSystemStreamPathInfo;
+    public function path(): string;
+
+    /**
+     * @return string
+     */
+    public function fullPath(): string;
+
+    /**
+     * Next item in directory
+     * @return IFileInfo|null
+     */
+    public function next(): ?IFileInfo;
+
+    /**
+     * Goes back to first item
+     * @return bool
+     */
+    public function rewind(): bool;
+
+    /**
+     * Closes the handle
+     */
+    public function close(): void;
 }

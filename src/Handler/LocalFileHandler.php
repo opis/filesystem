@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019-2020 Zindex Software
+ * Copyright 2019 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,23 @@
 
 namespace Opis\FileSystem\Handler;
 
-use Throwable;
 use RecursiveDirectoryIterator, RecursiveIteratorIterator, FilesystemIterator;
-use Opis\Stream\{Stream, Printer\CopyPrinter};
+use Opis\Stream\{IStream, Printer\CopyPrinter};
 use Opis\FileSystem\FileStream;
 use Opis\FileSystem\Traits\SearchTrait;
-use Opis\FileSystem\File\{FileInfo, Stat};
-use Opis\FileSystem\Directory\{Directory, LocalDirectory};
+use Opis\FileSystem\File\{IFileInfo, FileInfo, Stat};
+use Opis\FileSystem\Directory\{IDirectory, LocalDirectory};
 
-class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandler
+class LocalFileHandler implements IFileSystemHandler, IAccessHandler, ISearchHandler
 {
     use SearchTrait;
 
-    protected string $root;
-    protected ?string $baseUrl = null;
-    protected int $defaultMode = 0777;
+    /** @var string */
+    protected $root;
+    /** @var string|null */
+    protected $baseUrl;
+    /** @var int */
+    protected $defaultMode = 0777;
 
     /**
      * LocalFileHandler constructor.
@@ -68,7 +70,7 @@ class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandle
     /**
      * @inheritDoc
      */
-    public function mkdir(string $path, int $mode = 0777, bool $recursive = true): ?FileInfo
+    public function mkdir(string $path, int $mode = 0777, bool $recursive = true): ?IFileInfo
     {
         $fullPath = $this->fullPath($path);
         if (is_dir($fullPath)) {
@@ -121,7 +123,7 @@ class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandle
     /**
      * @inheritDoc
      */
-    public function touch(string $path, int $time, ?int $atime = null): ?FileInfo
+    public function touch(string $path, int $time, ?int $atime = null): ?IFileInfo
     {
         if (!$this->ensureDir($path, $this->defaultMode)) {
             return null;
@@ -137,7 +139,7 @@ class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandle
     /**
      * @inheritDoc
      */
-    public function chmod(string $path, int $mode): ?FileInfo
+    public function chmod(string $path, int $mode): ?IFileInfo
     {
         if (!@chmod($this->fullPath($path), $mode)) {
             return null;
@@ -148,7 +150,7 @@ class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandle
     /**
      * @inheritDoc
      */
-    public function chown(string $path, string $owner): ?FileInfo
+    public function chown(string $path, string $owner): ?IFileInfo
     {
         if (!@chown($this->fullPath($path), $owner)) {
             return null;
@@ -159,7 +161,7 @@ class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandle
     /**
      * @inheritDoc
      */
-    public function chgrp(string $path, string $group): ?FileInfo
+    public function chgrp(string $path, string $group): ?IFileInfo
     {
         if (!@chgrp($this->fullPath($path), $group)) {
             return null;
@@ -170,7 +172,7 @@ class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandle
     /**
      * @inheritDoc
      */
-    public function rename(string $from, string $to): ?FileInfo
+    public function rename(string $from, string $to): ?IFileInfo
     {
         if ($from === $to) {
             return null;
@@ -184,7 +186,7 @@ class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandle
     /**
      * @inheritDoc
      */
-    public function copy(string $from, string $to, bool $overwrite = true): ?FileInfo
+    public function copy(string $from, string $to, bool $overwrite = true): ?IFileInfo
     {
         $from = trim($from, ' /');
         $to = trim($to, ' /');
@@ -259,7 +261,7 @@ class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandle
     /**
      * @inheritDoc
      */
-    public function write(string $path, Stream $stream, int $mode = 0777): ?FileInfo
+    public function write(string $path, IStream $stream, int $mode = 0777): ?IFileInfo
     {
         if ($stream->size() === 0 && $stream->isEOF()) {
             $now = time();
@@ -285,7 +287,7 @@ class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandle
     /**
      * @inheritDoc
      */
-    public function file(string $path, string $mode = 'rb'): ?Stream
+    public function file(string $path, string $mode = 'rb'): ?IStream
     {
         if ($stat = $this->stat($path)) {
             if ($stat->isDir()) {
@@ -299,7 +301,7 @@ class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandle
 
         try {
             return new FileStream($this->fullPath($path), $mode, $stat);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             return null;
         }
     }
@@ -307,7 +309,7 @@ class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandle
     /**
      * @inheritDoc
      */
-    public function dir(string $path): ?Directory
+    public function dir(string $path): ?IDirectory
     {
         $stat = $this->stat($path);
         if (!$stat || !$stat->isDir()) {
@@ -319,7 +321,7 @@ class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandle
     /**
      * @inheritDoc
      */
-    public function info(string $path): ?FileInfo
+    public function info(string $path): ?IFileInfo
     {
         $path = trim($path, ' /');
         if ($path === '') {
@@ -372,10 +374,10 @@ class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandle
 
     /**
      * @param string $path
-     * @param Stream $stream
+     * @param IStream $stream
      * @return bool
      */
-    protected function writeFile(string $path, Stream $stream): bool
+    protected function writeFile(string $path, IStream $stream): bool
     {
         $path = $this->fullPath($path);
 

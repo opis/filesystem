@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019-2020 Zindex Software
+ * Copyright 2019 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,22 +18,22 @@
 namespace Opis\FileSystem\Directory;
 
 use Iterator;
-use Opis\FileSystem\ProtocolInfo;
-use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\File\IFileInfo;
+use Opis\FileSystem\IProtocolInfo;
 use Opis\FileSystem\Traits\DirectoryFullPathTrait;
 
-class IteratorDirectory implements Directory, ProtocolInfo
+class IteratorDirectory implements IDirectory, IProtocolInfo
 {
     use DirectoryFullPathTrait;
 
-    protected string $path;
-
-    /** @var Iterator|FileInfo[]|null */
-    protected ?Iterator $iterator = null;
+    /** @var string */
+    protected $path;
+    /** @var Iterator|IFileInfo[] */
+    protected $iterator;
 
     /**
      * @param string $path
-     * @param Iterator|FileInfo[] $iterator
+     * @param Iterator|IFileInfo[] $iterator
      */
     public function __construct(string $path, Iterator $iterator)
     {
@@ -53,7 +53,7 @@ class IteratorDirectory implements Directory, ProtocolInfo
     /**
      * @inheritDoc
      */
-    public function doNext(): ?FileInfo
+    public function doNext(): ?IFileInfo
     {
         if ($this->iterator === null || !$this->iterator->valid()) {
             return null;
@@ -63,7 +63,7 @@ class IteratorDirectory implements Directory, ProtocolInfo
 
         $this->iterator->next();
 
-        return $next instanceof FileInfo ? $next : null;
+        return $next instanceof IFileInfo ? $next : null;
     }
 
     /**

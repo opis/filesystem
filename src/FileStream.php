@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019-2020 Zindex Software
+ * Copyright 2019 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,16 @@
 
 namespace Opis\FileSystem;
 
+use Opis\Stream\Stream;
 use Opis\FileSystem\File\Stat;
-use Opis\Stream\ResourceStream;
 
-class FileStream extends ResourceStream
+class FileStream extends Stream
 {
     /** @var callable */
     protected $saveHandler = null;
-    protected ?array $stat = null;
+
+    /** @var null|array */
+    protected $stat = null;
 
     /**
      * FileStream constructor.
@@ -34,8 +36,7 @@ class FileStream extends ResourceStream
      * @param callable|null $saveHandler
      * @param null|string $data
      */
-    public function __construct($stream, string $mode, ?Stat $stat = null,
-        ?callable $saveHandler = null, ?string $data = null)
+    public function __construct($stream, string $mode, ?Stat $stat = null, ?callable $saveHandler = null, ?string $data = null)
     {
         parent::__construct($stream, $mode);
 

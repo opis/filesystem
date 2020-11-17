@@ -15,16 +15,20 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\Test;
+namespace Opis\FileSystem\Handler;
 
+use Opis\FileSystem\Context;
 
-use Opis\FileSystem\Handler\CachedHandler;
-use Opis\FileSystem\Handler\IFileSystemHandler;
-
-class CachedLocalHandlerTest extends LocalHandlerTest
+interface IContextHandler
 {
-    public static function handler(): IFileSystemHandler
-    {
-        return new CachedHandler(parent::handler());
-    }
+    /**
+     * @param null|Context $context
+     * @return bool
+     */
+    public function setContext(?Context $context): bool;
+
+    /**
+     * @return null|Context
+     */
+    public function getContext(): ?Context;
 }

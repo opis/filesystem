@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019-2020 Zindex Software
+ * Copyright 2019 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,30 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem;
+namespace Opis\FileSystem\Traits;
 
-interface ProtocolInfo
+use Opis\FileSystem\Context;
+
+trait ContextTrait
 {
-    /**
-     * @return string|null
-     */
-    public function protocol(): ?string;
+    /** @var null|Context */
+    protected $context = null;
 
     /**
-     * @param string|null $protocol
-     * @return ProtocolInfo|static
+     * @inheritDoc
      */
-    public function setProtocol(?string $protocol): ProtocolInfo;
+    public function setContext(?Context $context): bool
+    {
+        $this->context = $context;
+
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getContext(): ?Context
+    {
+        return $this->context;
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019-2020 Zindex Software
+ * Copyright 2019 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,19 @@
 
 namespace Opis\FileSystem\Handler;
 
-use Opis\Stream\Stream;
-use Opis\FileSystem\Directory\Directory;
-use Opis\FileSystem\File\{FileInfo, Stat};
+use Opis\Stream\IStream;
+use Opis\FileSystem\Directory\IDirectory;
+use Opis\FileSystem\File\{IFileInfo, Stat};
 
-interface FileSystemHandler
+interface IFileSystemHandler
 {
     /**
      * @param string $path
      * @param int $mode
      * @param bool $recursive
-     * @return null|FileInfo
+     * @return null|IFileInfo
      */
-    public function mkdir(string $path, int $mode = 0777, bool $recursive = true): ?FileInfo;
+    public function mkdir(string $path, int $mode = 0777, bool $recursive = true): ?IFileInfo;
 
     /**
      * @param string $path
@@ -47,17 +47,17 @@ interface FileSystemHandler
     /**
      * @param string $from
      * @param string $to
-     * @return null|FileInfo
+     * @return null|IFileInfo
      */
-    public function rename(string $from, string $to): ?FileInfo;
+    public function rename(string $from, string $to): ?IFileInfo;
 
     /**
      * @param string $from
      * @param string $to
      * @param bool $overwrite
-     * @return null|FileInfo
+     * @return null|IFileInfo
      */
-    public function copy(string $from, string $to, bool $overwrite = true): ?FileInfo;
+    public function copy(string $from, string $to, bool $overwrite = true): ?IFileInfo;
 
     /**
      * @param string $path
@@ -68,28 +68,28 @@ interface FileSystemHandler
 
     /**
      * @param string $path
-     * @param Stream $stream
+     * @param IStream $stream
      * @param int $mode
-     * @return null|FileInfo
+     * @return null|IFileInfo
      */
-    public function write(string $path, Stream $stream, int $mode = 0777): ?FileInfo;
+    public function write(string $path, IStream $stream, int $mode = 0777): ?IFileInfo;
 
     /**
      * @param string $path
      * @param string $mode
-     * @return Stream|null
+     * @return IStream|null
      */
-    public function file(string $path, string $mode = 'rb'): ?Stream;
+    public function file(string $path, string $mode = 'rb'): ?IStream;
 
     /**
      * @param string $path
-     * @return Directory|null
+     * @return IDirectory|null
      */
-    public function dir(string $path): ?Directory;
+    public function dir(string $path): ?IDirectory;
 
     /**
      * @param string $path
-     * @return FileInfo|null
+     * @return IFileInfo|null
      */
-    public function info(string $path): ?FileInfo;
+    public function info(string $path): ?IFileInfo;
 }

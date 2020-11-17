@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019-2020 Zindex Software
+ * Copyright 2019 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,36 +15,20 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\Directory;
+namespace Opis\FileSystem\Handler;
 
-use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\File\IFileInfo;
 
-interface Directory
+interface ISearchHandler
 {
     /**
-     * @return string
+     * @param string $path
+     * @param string $text
+     * @param callable|null $filter
+     * @param array|null $options
+     * @param int|null $depth
+     * @param int|null $limit
+     * @return iterable|IFileInfo[]
      */
-    public function path(): string;
-
-    /**
-     * @return string
-     */
-    public function fullPath(): string;
-
-    /**
-     * Next item in directory
-     * @return FileInfo|null
-     */
-    public function next(): ?FileInfo;
-
-    /**
-     * Goes back to first item
-     * @return bool
-     */
-    public function rewind(): bool;
-
-    /**
-     * Closes the handle
-     */
-    public function close(): void;
+    public function search(string $path, string $text, ?callable $filter = null, ?array $options = null, ?int $depth = 0, ?int $limit = null): iterable;
 }

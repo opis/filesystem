@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019-2020 Zindex Software
+ * Copyright 2019 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@ namespace Opis\FileSystem\Traits;
 
 trait ProtocolTrait
 {
-    protected string $protocol = '';
+    /** @var string */
+    protected $protocol = '';
 
     /**
      * @param string $path

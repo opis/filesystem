@@ -18,7 +18,7 @@
 namespace Opis\FileSystem\Test;
 
 use Opis\FileSystem\Handler\LocalFileHandler;
-use Opis\FileSystem\MountManager;
+use Opis\FileSystem\IMountManager;
 use Opis\FileSystem\StreamWrapperMountManager;
 use PHPUnit\Framework\TestCase;
 
@@ -26,7 +26,7 @@ class StreamWrapperMountManagerTest extends TestCase
 {
     use FilesTrait;
 
-    /** @var MountManager */
+    /** @var IMountManager */
     protected static $manager;
 
     /** @var string */
@@ -35,7 +35,7 @@ class StreamWrapperMountManagerTest extends TestCase
     /**
      * @inheritDoc
      */
-    public static function setUpBeforeClass(): void
+    public static function setUpBeforeClass()
     {
         self::$dir = self::copyFiles(__DIR__ . '/files/manager', __DIR__ . '/files');
 
@@ -48,13 +48,13 @@ class StreamWrapperMountManagerTest extends TestCase
     /**
      * @inheritDoc
      */
-    public static function tearDownAfterClass(): void
+    public static function tearDownAfterClass()
     {
         self::deleteFiles(self::$dir);
     }
 
 
-    protected function m(): MountManager
+    protected function m(): IMountManager
     {
         return self::$manager;
     }

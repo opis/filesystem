@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019-2020 Zindex Software
+ * Copyright 2019 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,12 @@
 
 namespace Opis\FileSystem\Traits;
 
-use Opis\FileSystem\Directory\Directory;
+use Opis\FileSystem\Directory\IDirectory;
 
 trait StreamDirectoryTrait
 {
-    protected ?Directory $dir = null;
+    /** @var IDirectory|null */
+    protected $dir = null;
 
     /**
      * @inheritDoc
@@ -84,7 +85,7 @@ trait StreamDirectoryTrait
 
     /**
      * @param string $path
-     * @return Directory|null
+     * @return IDirectory|null
      */
-    abstract protected function dir(string $path): ?Directory;
+    abstract protected function dir(string $path): ?IDirectory;
 }

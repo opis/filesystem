@@ -15,16 +15,18 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\Test;
+namespace Opis\FileSystem;
 
-
-use Opis\FileSystem\Handler\CachedHandler;
-use Opis\FileSystem\Handler\IFileSystemHandler;
-
-class CachedLocalHandlerTest extends LocalHandlerTest
+interface IProtocolInfo
 {
-    public static function handler(): IFileSystemHandler
-    {
-        return new CachedHandler(parent::handler());
-    }
+    /**
+     * @return string|null
+     */
+    public function protocol(): ?string;
+
+    /**
+     * @param string|null $protocol
+     * @return IProtocolInfo|static
+     */
+    public function setProtocol(?string $protocol): self;
 }

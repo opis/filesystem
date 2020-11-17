@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019-2020 Zindex Software
+ * Copyright 2019 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,34 +18,40 @@
 namespace Opis\FileSystem\Handler;
 
 use ArrayObject;
-use Opis\Stream\Stream;
+use Opis\Stream\IStream;
 use Opis\FileSystem\Context;
-use Opis\FileSystem\File\{Stat, FileInfo};
+use Opis\FileSystem\File\{Stat, IFileInfo};
 use Opis\FileSystem\Cache\{MemoryCacheHandler, ICacheHandler};
-use Opis\FileSystem\Directory\{ArrayDirectory, CachedDirectory, Directory};
+use Opis\FileSystem\Directory\{ArrayDirectory, CachedDirectory, IDirectory};
 
-class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, ContextHandler
+class CachedHandler implements IFileSystemHandler, IAccessHandler, ISearchHandler, IContextHandler
 {
-    /** @var FileSystemHandler|AccessHandler|SearchHandler|ContextHandler */
+    /** @var IFileSystemHandler|IAccessHandler|ISearchHandler|IContextHandler */
     protected $handler;
-    /** @var null|ArrayObject|FileInfo[] */
-    protected ?ArrayObject $data = null;
-    protected ICacheHandler $cache;
-    protected bool $lazyDirCache = false;
-    protected bool $ignoreLinks = true;
-    protected bool $isContextHandler = false;
-    protected bool $isAccessHandler = false;
-    protected bool $isSearchHandler = false;
+    /** @var ICacheHandler */
+    protected $cache;
+    /** @var null|ArrayObject|IFileInfo[] */
+    protected $data = null;
+    /** @var bool */
+    protected $lazyDirCache = false;
+    /** @var bool */
+    protected $ignoreLinks = true;
+    /** @var bool */
+    protected $isContextHandler = false;
+    /** @var bool */
+    protected $isAccessHandler = false;
+    /** @var bool */
+    protected $isSearchHandler = false;
 
     /**
      * CachedHandler constructor.
-     * @param FileSystemHandler $handler
+     * @param IFileSystemHandler $handler
      * @param null|ICacheHandler $cache
      * @param bool $lazy_dir_cache
      * @param bool $ignore_links
      */
     public function __construct(
-        FileSystemHandler $handler,
+        IFileSystemHandler $handler,
         ?ICacheHandler $cache = null,
         bool $lazy_dir_cache = false,
         bool $ignore_links = true
@@ -56,15 +62,15 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
         $this->lazyDirCache = $lazy_dir_cache;
         $this->ignoreLinks = $ignore_links;
 
-        $this->isAccessHandler = $handler instanceof AccessHandler;
-        $this->isContextHandler = $handler instanceof ContextHandler;
-        $this->isSearchHandler = $handler instanceof SearchHandler;
+        $this->isAccessHandler = $handler instanceof IAccessHandler;
+        $this->isContextHandler = $handler instanceof IContextHandler;
+        $this->isSearchHandler = $handler instanceof ISearchHandler;
     }
 
     /**
-     * @return FileSystemHandler
+     * @return IFileSystemHandler
      */
-    public function handler(): FileSystemHandler
+    public function handler(): IFileSystemHandler
     {
         return $this->handler;
     }
@@ -88,10 +94,10 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
     }
 
     /**
-     * @param FileInfo $item
+     * @param IFileInfo $item
      * @return bool
      */
-    public function updateCache(FileInfo $item): bool
+    public function updateCache(IFileInfo $item): bool
     {
         $this->initCache();
 
@@ -191,11 +197,11 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
 
     /**
      * @param ArrayObject $data
-     * @param FileInfo $file
-     * @param FileSystemHandler $handler
+     * @param IFileInfo $file
+     * @param IFileSystemHandler $handler
      * @return ArrayObject
      */
-    protected function rebuildCacheData(ArrayObject $data, FileInfo $file, FileSystemHandler $handler): ArrayObject
+    protected function rebuildCacheData(ArrayObject $data, IFileInfo $file, IFileSystemHandler $handler): ArrayObject
     {
         $path = trim($file->path(), ' /');
         $data[$path] = $file;
@@ -228,7 +234,7 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
     /**
      * @inheritDoc
      */
-    public function dir(string $path): ?Directory
+    public function dir(string $path): ?IDirectory
     {
         $this->initCache();
 
@@ -276,7 +282,7 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
     /**
      * @inheritDoc
      */
-    public function info(string $path): ?FileInfo
+    public function info(string $path): ?IFileInfo
     {
         $this->initCache();
 
@@ -296,7 +302,7 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
     /**
      * @inheritDoc
      */
-    public function mkdir(string $path, int $mode = 0777, bool $recursive = true): ?FileInfo
+    public function mkdir(string $path, int $mode = 0777, bool $recursive = true): ?IFileInfo
     {
         if ($item = $this->handler->mkdir($path, $mode, $recursive)) {
             $this->updateCache($item);
@@ -334,7 +340,7 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
     /**
      * @inheritDoc
      */
-    public function touch(string $path, int $time, ?int $atime = null): ?FileInfo
+    public function touch(string $path, int $time, ?int $atime = null): ?IFileInfo
     {
         if (!$this->isAccessHandler) {
             return null;
@@ -350,7 +356,7 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
     /**
      * @inheritDoc
      */
-    public function chmod(string $path, int $mode): ?FileInfo
+    public function chmod(string $path, int $mode): ?IFileInfo
     {
         if (!$this->isAccessHandler) {
             return null;
@@ -366,7 +372,7 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
     /**
      * @inheritDoc
      */
-    public function chown(string $path, string $owner): ?FileInfo
+    public function chown(string $path, string $owner): ?IFileInfo
     {
         if (!$this->isAccessHandler) {
             return null;
@@ -382,7 +388,7 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
     /**
      * @inheritDoc
      */
-    public function chgrp(string $path, string $group): ?FileInfo
+    public function chgrp(string $path, string $group): ?IFileInfo
     {
         if (!$this->isAccessHandler) {
             return null;
@@ -398,7 +404,7 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
     /**
      * @inheritDoc
      */
-    public function rename(string $from, string $to): ?FileInfo
+    public function rename(string $from, string $to): ?IFileInfo
     {
         if ($item = $this->handler->rename($from, $to)) {
             $this->clearCache($from);
@@ -411,7 +417,7 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
     /**
      * @inheritDoc
      */
-    public function copy(string $from, string $to, bool $overwrite = true): ?FileInfo
+    public function copy(string $from, string $to, bool $overwrite = true): ?IFileInfo
     {
         if ($item = $this->handler->copy($from, $to, $overwrite)) {
             $this->updateCache($item);
@@ -423,7 +429,7 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
     /**
      * @inheritDoc
      */
-    public function write(string $path, Stream $stream, int $mode = 0777): ?FileInfo
+    public function write(string $path, IStream $stream, int $mode = 0777): ?IFileInfo
     {
         if ($item = $this->handler->write($path, $stream, $mode)) {
             $this->updateCache($item);
@@ -435,7 +441,7 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
     /**
      * @inheritDoc
      */
-    public function file(string $path, string $mode = 'rb'): ?Stream
+    public function file(string $path, string $mode = 'rb'): ?IStream
     {
         // No cache here
         return $this->handler->file($path, $mode);

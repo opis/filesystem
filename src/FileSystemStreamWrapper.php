@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019-2020 Zindex Software
+ * Copyright 2019 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,13 @@
 
 namespace Opis\FileSystem;
 
-use Opis\Stream\{
-    Stream, StreamWrapper
-};
+use Opis\Stream\IStream;
 use Opis\FileSystem\File\Stat;
-use Opis\FileSystem\Directory\Directory;
+use Opis\FileSystem\Directory\IDirectory;
 use Opis\FileSystem\Handler\{
-    AccessHandler,
-    ContextHandler,
-    FileSystemHandler
+    IAccessHandler,
+    IContextHandler,
+    IFileSystemHandler
 };
 use Opis\FileSystem\Traits\{
     ProtocolTrait,
@@ -35,39 +33,33 @@ use Opis\FileSystem\Traits\{
     StreamContextTrait
 };
 
-class FileSystemStreamWrapper implements StreamWrapper
+class FileSystemStreamWrapper implements IFileSystemStreamWrapper
 {
     use StreamMetaTrait, StreamContextTrait, StreamFileTrait, StreamDirectoryTrait, ProtocolTrait;
 
-    /** @var FileSystemHandlerManager[] */
-    private static array $registered = [];
+    /** @var IFileSystemHandlerManager[] */
+    private static $registered = [];
 
     /**
-     * @param string $path
-     * @param int $mode
-     * @param int $options
-     * @return bool
+     * @inheritDoc
      */
     public function mkdir(string $path, int $mode, int $options): bool
     {
         return (bool)$this->forward($path, __FUNCTION__,
-            [$mode, ($options & STREAM_MKDIR_RECURSIVE) === STREAM_MKDIR_RECURSIVE]);
+            [$mode, $options & STREAM_MKDIR_RECURSIVE === STREAM_MKDIR_RECURSIVE]);
     }
 
     /**
-     * @param string $path
-     * @param int $options
-     * @return bool
+     * @inheritDoc
      */
     public function rmdir(string $path, int $options): bool
     {
         return (bool)$this->forward($path, __FUNCTION__,
-            [($options & STREAM_MKDIR_RECURSIVE) === STREAM_MKDIR_RECURSIVE]);
+            [$options & STREAM_MKDIR_RECURSIVE === STREAM_MKDIR_RECURSIVE]);
     }
 
     /**
-     * @param string $path
-     * @return bool
+     * @inheritDoc
      */
     public function unlink(string $path): bool
     {
@@ -107,10 +99,7 @@ class FileSystemStreamWrapper implements StreamWrapper
     }
 
     /**
-     * @param string $from
-     * @param string $to
-     * @param bool $overwrite
-     * @return bool
+     * @inheritDoc
      */
     public function copy(string $from, string $to, bool $overwrite = true): bool
     {
@@ -118,9 +107,7 @@ class FileSystemStreamWrapper implements StreamWrapper
     }
 
     /**
-     * @param string $from
-     * @param string $to
-     * @return bool
+     * @inheritDoc
      */
     public function rename(string $from, string $to): bool
     {
@@ -128,21 +115,19 @@ class FileSystemStreamWrapper implements StreamWrapper
     }
 
     /**
-     * @param string $path
-     * @param int $flags
-     * @return array|null
+     * @inheritDoc
      */
     public function url_stat(string $path, int $flags): ?array
     {
         /** @var Stat|null $stat */
-        $stat = $this->forward($path, 'stat', [($flags & STREAM_URL_STAT_LINK) === STREAM_URL_STAT_LINK], null);
+        $stat = $this->forward($path, 'stat', [$flags & STREAM_URL_STAT_LINK === STREAM_URL_STAT_LINK], null);
         return $stat ? $stat->toArray() : null;
     }
 
     /**
      * @inheritDoc
      */
-    protected function file(string $path, string $mode): ?Stream
+    protected function file(string $path, string $mode): ?IStream
     {
         return $this->forward($path, __FUNCTION__, [$mode], null);
     }
@@ -150,7 +135,7 @@ class FileSystemStreamWrapper implements StreamWrapper
     /**
      * @inheritDoc
      */
-    protected function dir(string $path): ?Directory
+    protected function dir(string $path): ?IDirectory
     {
         return $this->forward($path, __FUNCTION__, [], null, true);
     }
@@ -199,7 +184,7 @@ class FileSystemStreamWrapper implements StreamWrapper
 
         unset($info);
 
-        if ($access && !($handler instanceof AccessHandler)) {
+        if ($access && !($handler instanceof IAccessHandler)) {
             return $failure;
         }
 
@@ -207,7 +192,7 @@ class FileSystemStreamWrapper implements StreamWrapper
 
         unset($path);
 
-        if ($handler instanceof ContextHandler) {
+        if ($handler instanceof IContextHandler) {
             $ctx = $handler->getContext();
             $handler->setContext($this->context());
             $ret = $handler->{$method}(...$args);
@@ -274,7 +259,7 @@ class FileSystemStreamWrapper implements StreamWrapper
 
             $ctx = null;
 
-            if ($handler instanceof ContextHandler) {
+            if ($handler instanceof IContextHandler) {
                 $ctx = $handler->getContext();
                 $handler->setContext($this->context());
             }
@@ -285,7 +270,7 @@ class FileSystemStreamWrapper implements StreamWrapper
                 $ret = $handler->copy($from, $to, $overwrite) !== null;
             }
 
-            if ($handler instanceof ContextHandler) {
+            if ($handler instanceof IContextHandler) {
                 $handler->setContext($ctx);
             }
 
@@ -307,13 +292,13 @@ class FileSystemStreamWrapper implements StreamWrapper
         $from_ctx = null;
         $to_ctx = null;
 
-        if ($from_handler instanceof ContextHandler) {
+        if ($from_handler instanceof IContextHandler) {
             $ctx = $this->context();
             $from_ctx = $from_handler->getContext();
             $from_handler->setContext($ctx);
         }
 
-        if ($to_handler instanceof ContextHandler) {
+        if ($to_handler instanceof IContextHandler) {
             if ($ctx === false) {
                 $ctx = $this->context();
             }
@@ -329,10 +314,10 @@ class FileSystemStreamWrapper implements StreamWrapper
         }
 
         if ($ctx !== false) {
-            if ($from_handler instanceof ContextHandler) {
+            if ($from_handler instanceof IContextHandler) {
                 $from_handler->setContext($from_ctx);
             }
-            if ($to_handler instanceof ContextHandler) {
+            if ($to_handler instanceof IContextHandler) {
                 $to_handler->setContext($to_ctx);
             }
         }
@@ -341,9 +326,9 @@ class FileSystemStreamWrapper implements StreamWrapper
     }
 
     /**
-     * @param FileSystemHandler $from
+     * @param IFileSystemHandler $from
      * @param string $from_path
-     * @param FileSystemHandler $to
+     * @param IFileSystemHandler $to
      * @param string $to_path
      * @param bool $move
      * @param bool $overwrite
@@ -351,9 +336,9 @@ class FileSystemStreamWrapper implements StreamWrapper
      * @return bool
      */
     protected function copyDir(
-        FileSystemHandler $from,
+        IFileSystemHandler $from,
         string $from_path,
-        FileSystemHandler $to,
+        IFileSystemHandler $to,
         string $to_path,
         bool $move,
         bool $overwrite,
@@ -409,9 +394,9 @@ class FileSystemStreamWrapper implements StreamWrapper
     }
 
     /**
-     * @param FileSystemHandler $from
+     * @param IFileSystemHandler $from
      * @param string $from_path
-     * @param FileSystemHandler $to
+     * @param IFileSystemHandler $to
      * @param string $to_path
      * @param bool $move
      * @param bool $overwrite
@@ -419,9 +404,9 @@ class FileSystemStreamWrapper implements StreamWrapper
      * @return bool
      */
     protected function copyFile(
-        FileSystemHandler $from,
+        IFileSystemHandler $from,
         string $from_path,
-        FileSystemHandler $to,
+        IFileSystemHandler $to,
         string $to_path,
         bool $move,
         bool $overwrite,
@@ -462,20 +447,17 @@ class FileSystemStreamWrapper implements StreamWrapper
     }
 
     /**
-     * @param string $protocol
-     * @return FileSystemHandlerManager|null
+     * @inheritDoc
      */
-    final public static function manager(string $protocol): ?FileSystemHandlerManager
+    final public static function manager(string $protocol): ?IFileSystemHandlerManager
     {
         return self::$registered[$protocol] ?? null;
     }
 
     /**
-     * @param string $protocol
-     * @param FileSystemHandlerManager $manager
-     * @return bool
+     * @inheritdoc
      */
-    final public static function register(string $protocol, FileSystemHandlerManager $manager): bool
+    final public static function register(string $protocol, IFileSystemHandlerManager $manager): bool
     {
         if (isset(self::$registered[$protocol])) {
             return self::$registered[$protocol] === $manager;
@@ -491,8 +473,7 @@ class FileSystemStreamWrapper implements StreamWrapper
     }
 
     /**
-     * @param string $protocol
-     * @return bool
+     * @inheritdoc
      */
     final public static function unregister(string $protocol): bool
     {
@@ -506,8 +487,7 @@ class FileSystemStreamWrapper implements StreamWrapper
     }
 
     /**
-     * @param string $protocol
-     * @return bool
+     * @inheritdoc
      */
     final public static function isRegistered(string $protocol): bool
     {
@@ -516,7 +496,6 @@ class FileSystemStreamWrapper implements StreamWrapper
 
     /**
      * @return int
-     * One of STREAM_IS_* constants
      */
     protected static function protocolFlags(): int
     {

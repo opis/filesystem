@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019-2020 Zindex Software
+ * Copyright 2019 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +18,19 @@
 namespace Opis\FileSystem;
 
 use RuntimeException;
-use Opis\FileSystem\File\FileInfo;
-use Opis\FileSystem\Handler\FileSystemHandler;
+use Opis\FileSystem\File\IFileInfo;
+use Opis\FileSystem\Handler\IFileSystemHandler;
 
 class StreamWrapperMountManager extends MountManager
 {
-    protected string $protocol;
+    /** @var string */
+    protected $protocol;
 
-    /** @var FileSystemStreamWrapper|string */
+    /** @var IFileSystemStreamWrapper|string */
     protected $wrapperClass;
 
     /**
-     * @param FileSystemHandler[] $handlers
+     * @param IFileSystemHandler[] $handlers
      * @param string $protocol
      * @param string $wrapper_class
      */
@@ -37,9 +38,8 @@ class StreamWrapperMountManager extends MountManager
     {
         parent::__construct($handlers);
 
-        /** @var FileSystemStreamWrapper $wrapper_class */
-        if ($wrapper_class !== FileSystemStreamWrapper::class &&
-            !is_subclass_of($wrapper_class, FileSystemStreamWrapper::class, true)) {
+        /** @var IFileSystemStreamWrapper $wrapper_class */
+        if (!is_subclass_of($wrapper_class, IFileSystemStreamWrapper::class, true)) {
             throw new RuntimeException('Invalid wrapper class ' . $wrapper_class);
         }
 
@@ -70,7 +70,7 @@ class StreamWrapperMountManager extends MountManager
     /**
      * @inheritDoc
      */
-    public function rename(string $from, string $to): ?FileInfo
+    public function rename(string $from, string $to): ?IFileInfo
     {
         if (strpos($from, '://') === false) {
             return null;
@@ -83,25 +83,25 @@ class StreamWrapperMountManager extends MountManager
             }
         }
 
-        [$proto_from, $from] = explode('://', $from, 2);
+        list($proto_from, $from) = explode('://', $from, 2);
         $handler_from = $this->handler($proto_from);
         if ($handler_from === null) {
             return null;
         }
         $from = $this->normalizePath($from);
 
-        [$proto_to, $to] = explode('://', $to, 2);
+        list($proto_to, $to) = explode('://', $to, 2);
         $to = $this->normalizePath($to);
 
         if ($proto_from === $proto_to) {
             $info = $handler_from->rename($from, $to);
-            if ($info instanceof ProtocolInfo) {
+            if ($info instanceof IProtocolInfo) {
                 $info->setProtocol($proto_to);
             }
             return $info;
         }
 
-        $from = $this->protocol . '://' . $proto_from . '/' . $from;
+        $from = $this->protocol . '://' . $proto_from . '/' . $from;;
         $to = $this->protocol . '://' . $proto_to . '/' . $to;
 
         if (!@rename($from, $to)) {
@@ -114,7 +114,7 @@ class StreamWrapperMountManager extends MountManager
     /**
      * @inheritDoc
      */
-    public function copy(string $from, string $to, bool $overwrite = true): ?FileInfo
+    public function copy(string $from, string $to, bool $overwrite = true): ?IFileInfo
     {
         if (strpos($from, '://') === false) {
             return null;
@@ -127,25 +127,25 @@ class StreamWrapperMountManager extends MountManager
             }
         }
 
-        [$proto_from, $from] = explode('://', $from, 2);
+        list($proto_from, $from) = explode('://', $from, 2);
         $handler_from = $this->handler($proto_from);
         if ($handler_from === null) {
             return null;
         }
         $from = $this->normalizePath($from);
 
-        [$proto_to, $to] = explode('://', $to, 2);
+        list($proto_to, $to) = explode('://', $to, 2);
         $to = $this->normalizePath($to);
 
         if ($proto_from === $proto_to) {
             $info = $handler_from->copy($from, $to, $overwrite);
-            if ($info instanceof ProtocolInfo) {
+            if ($info instanceof IProtocolInfo) {
                 $info->setProtocol($proto_to);
             }
             return $info;
         }
 
-        $from = $this->protocol . '://' . $proto_from . '/' . $from;
+        $from = $this->protocol . '://' . $proto_from . '/' . $from;;
         $to = $this->protocol . '://' . $proto_to . '/' . $to;
 
         if (!@copy($from, $to)) {

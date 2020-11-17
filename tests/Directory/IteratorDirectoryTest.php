@@ -20,7 +20,7 @@ namespace Opis\FileSystem\Test\Directory;
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use Opis\FileSystem\Directory\IteratorDirectory;
-use Opis\FileSystem\File\{DirectoryStat, FileInfo, FileStat};
+use Opis\FileSystem\File\{DirectoryStat, FileInfo, FileStat, IFileInfo};
 
 class IteratorDirectoryTest extends TestCase
 {
@@ -54,21 +54,21 @@ class IteratorDirectoryTest extends TestCase
 
         $f1 = $dir->next();
 
-        $this->assertInstanceOf(FileInfo::class, $f1);
+        $this->assertInstanceOf(IFileInfo::class, $f1);
         $this->assertEquals('file1.txt', $f1->name());
         $this->assertEquals('my/path/file1.txt', $f1->path());
         $this->assertTrue($f1->stat()->isFile());
 
         $f2 = $dir->next();
 
-        $this->assertInstanceOf(FileInfo::class, $f2);
+        $this->assertInstanceOf(IFileInfo::class, $f2);
         $this->assertEquals('file2.txt', $f2->name());
         $this->assertEquals('my/path/file2.txt', $f2->path());
         $this->assertTrue($f2->stat()->isFile());
 
         $f3 = $dir->next();
 
-        $this->assertInstanceOf(FileInfo::class, $f3);
+        $this->assertInstanceOf(IFileInfo::class, $f3);
         $this->assertEquals('dir', $f3->name());
         $this->assertEquals('my/path/dir', $f3->path());
         $this->assertTrue($f3->stat()->isDir());

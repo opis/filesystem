@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019-2020 Zindex Software
+ * Copyright 2019 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,23 +17,24 @@
 
 namespace Opis\FileSystem\Directory;
 
-use Opis\FileSystem\ProtocolInfo;
-use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\File\IFileInfo;
+use Opis\FileSystem\IProtocolInfo;
 use Opis\FileSystem\Traits\DirectoryFullPathTrait;
 
-final class ArrayDirectory implements Directory, ProtocolInfo
+final class ArrayDirectory implements IDirectory, IProtocolInfo
 {
     use DirectoryFullPathTrait;
 
-    private string $path;
+    /** @var string */
+    private $path;
 
-    /** @var FileInfo[]|null */
-    private ?array $items= null;
+    /** @var \Opis\FileSystem\File\IFileInfo[] */
+    private $items;
 
     /**
      * ArrayDirectory constructor.
      * @param string $path
-     * @param FileInfo[]|array $items
+     * @param \Opis\FileSystem\File\IFileInfo[]|array $items
      */
     public function __construct(string $path, array $items)
     {
@@ -53,7 +54,7 @@ final class ArrayDirectory implements Directory, ProtocolInfo
     /**
      * @inheritDoc
      */
-    public function doNext(): ?FileInfo
+    public function doNext(): ?IFileInfo
     {
         if ($this->items === null) {
             return null;
@@ -62,7 +63,7 @@ final class ArrayDirectory implements Directory, ProtocolInfo
         $next = current($this->items);
         next($this->items);
 
-        return $next instanceof FileInfo ? $next : null;
+        return $next instanceof IFileInfo ? $next : null;
     }
 
     /**

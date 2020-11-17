@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019-2020 Zindex Software
+ * Copyright 2019 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,14 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\Traits;
+namespace Opis\FileSystem;
 
-use Opis\FileSystem\Context;
-
-trait ContextHandlerTrait
+interface IFileSystemHandlerManager
 {
-    protected ?Context $context = null;
-
-    public function setContext(?Context $context): bool
-    {
-        $this->context = $context;
-
-        return true;
-    }
-
-    public function getContext(): ?Context
-    {
-        return $this->context;
-    }
+    /**
+     * @param string $path
+     * @param string $protocol
+     * @return IFileSystemStreamPathInfo|null
+     */
+    public function handle(string $path, string $protocol): ?IFileSystemStreamPathInfo;
 }
