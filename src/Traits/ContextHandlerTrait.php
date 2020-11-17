@@ -15,18 +15,30 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\File;
+namespace Opis\FileSystem\Traits;
 
-final class FileStat extends Stat
+use Opis\FileSystem\Context;
+
+trait ContextHandlerTrait
 {
+    protected ?Context $context = null;
+
     /**
-     * @inheritDoc
+     * @param Context|null $context
+     * @return bool
      */
-    public function __construct(int $mode, int $size, ?int $time = null, array $info = [])
+    public function setContext(?Context $context): bool
     {
-        $info['mode'] = $mode | 0x8000;
-        $info['size'] = $size;
-        $info['atime'] = $info['ctime'] = $info['mtime'] = $time;
-        parent::__construct($info);
+        $this->context = $context;
+
+        return true;
+    }
+
+    /**
+     * @return Context|null
+     */
+    public function getContext(): ?Context
+    {
+        return $this->context;
     }
 }

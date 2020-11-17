@@ -43,7 +43,7 @@ trait FullPathTrait
     }
 
     /**
-     * @inheritdoc
+     * @return string
      */
     public function fullPath(): string
     {

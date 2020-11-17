@@ -19,15 +19,34 @@ namespace Opis\FileSystem;
 
 use Opis\FileSystem\Handler\FileSystemHandler;
 
-interface FileSystemStreamPathInfo
+final class FileSystemStreamPathInfo
 {
-    /**
-     * @return FileSystemHandler
-     */
-    public function handler(): FileSystemHandler;
+    private string $path;
+    private FileSystemHandler $handler;
 
     /**
-     * @return string
+     * @param FileSystemHandler $handler
+     * @param string $path
      */
-    public function path(): string;
+    public function __construct(FileSystemHandler $handler, string $path)
+    {
+        $this->handler = $handler;
+        $this->path = $path;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function handler(): FileSystemHandler
+    {
+        return $this->handler;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function path(): string
+    {
+        return $this->path;
+    }
 }

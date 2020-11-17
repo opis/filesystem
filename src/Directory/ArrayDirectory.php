@@ -17,24 +17,22 @@
 
 namespace Opis\FileSystem\Directory;
 
-use Opis\FileSystem\File\FileInfo;
-use Opis\FileSystem\ProtocolInfo;
 use Opis\FileSystem\Traits\DirectoryFullPathTrait;
+use Opis\FileSystem\{Directory, ProtocolInfo, FileInfo};
 
 final class ArrayDirectory implements Directory, ProtocolInfo
 {
     use DirectoryFullPathTrait;
 
-    /** @var string */
     private string $path;
 
-    /** @var FileInfo[] */
-    private ?array $items;
+    /** @var \Opis\FileSystem\FileInfo[]|null */
+    private ?array $items= null;
 
     /**
      * ArrayDirectory constructor.
      * @param string $path
-     * @param FileInfo[]|array $items
+     * @param \Opis\FileSystem\FileInfo[]|array $items
      */
     public function __construct(string $path, array $items)
     {

@@ -19,7 +19,6 @@ namespace Opis\FileSystem\Traits;
 
 trait ProtocolTrait
 {
-
     protected string $protocol = '';
 
     /**

@@ -15,19 +15,18 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\Cache;
+namespace Opis\FileSystem\CacheHandler;
 
 use ArrayObject;
-use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\{CacheHandler, FileInfo};
 
 class MemoryCacheHandler implements CacheHandler
 {
-
     protected ?ArrayObject $data = null;
 
     /**
      * MemoryCacheHandler constructor.
-     * @param FileInfo[]|null $data
+     * @param \Opis\FileSystem\FileInfo[]|null $data
      */
     public function __construct(?array $data = null)
     {

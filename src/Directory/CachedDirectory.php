@@ -17,20 +17,17 @@
 
 namespace Opis\FileSystem\Directory;
 
-use Opis\FileSystem\File\FileInfo;
 use Opis\FileSystem\Handler\CachedHandler;
-use Opis\FileSystem\ProtocolInfo;
 use Opis\FileSystem\Traits\DirectoryFullPathTrait;
+use Opis\FileSystem\{Directory, FileInfo, ProtocolInfo};
 
 final class CachedDirectory implements Directory
 {
     use DirectoryFullPathTrait;
 
-    private ?Directory $directory;
-
-    private ?CachedHandler $handler;
-
     private string $path;
+    private ?Directory $directory;
+    private ?CachedHandler $handler;
 
     /**
      * CachedDirectory constructor.

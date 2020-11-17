@@ -21,7 +21,7 @@ use Opis\FileSystem\Context;
 
 trait StreamContextTrait
 {
-    /** @var resource|null Automatically set by PHP */
+    /** @var resource|null */
     public $context = null;
 
     protected ?Context $contextOptions = null;

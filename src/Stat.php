@@ -15,7 +15,7 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\File;
+namespace Opis\FileSystem;
 
 use JsonSerializable;
 
@@ -202,9 +202,6 @@ class Stat implements JsonSerializable
         return $indexed ? array_merge(array_values($stat), $stat) : $stat;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function jsonSerialize()
     {
         return $this->toArray(false);

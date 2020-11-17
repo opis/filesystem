@@ -17,16 +17,21 @@
 
 namespace Opis\FileSystem\Traits;
 
-use Opis\FileSystem\{Directory\Directory, File\FileInfo};
+use Opis\FileSystem\{FileInfo, Directory};
 
 trait SearchTrait
 {
     /**
      * @inheritdoc
      */
-    public function search(string $path, string $text, ?callable $filter = null,
-                           ?array $options = null, ?int $depth = 0, ?int $limit = null): iterable
-    {
+    public function search(
+        string $path,
+        string $text,
+        ?callable $filter = null,
+        ?array $options = null,
+        ?int $depth = 0,
+        ?int $limit = null
+    ): iterable {
         $path = $this->dir(trim($path, ' /'));
 
         if ($path === null) {
@@ -51,16 +56,22 @@ trait SearchTrait
     }
 
     /**
-     * @param Directory $dir
+     * @param \Opis\FileSystem\Directory $dir
      * @param string $text
      * @param callable|null $filter
      * @param array|null $options
      * @param int $depth
      * @param int $max
-     * @return iterable|FileInfo[]
+     * @return iterable|\Opis\FileSystem\FileInfo[]
      */
-    protected function doSearch(Directory $dir, string $text, ?callable $filter = null, ?array $options = null, int $depth = PHP_INT_MAX, int &$max = PHP_INT_MAX): iterable
-    {
+    protected function doSearch(
+        Directory $dir,
+        string $text,
+        ?callable $filter = null,
+        ?array $options = null,
+        int $depth = PHP_INT_MAX,
+        int &$max = PHP_INT_MAX
+    ): iterable {
         /** @var FileInfo[] $to_check */
         $to_check = [];
 

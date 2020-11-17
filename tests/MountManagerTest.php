@@ -17,10 +17,9 @@
 
 namespace Opis\FileSystem\Test;
 
-use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\FileInfo;
 use Opis\FileSystem\Handler\LocalFileHandler;
 use Opis\FileSystem\MountManager;
-use Opis\FileSystem\DefaultMountManager;
 use Opis\Stream\PHPDataStream;
 use PHPUnit\Framework\TestCase;
 
@@ -41,7 +40,7 @@ class MountManagerTest extends TestCase
     {
         self::$dir = self::copyFiles(__DIR__ . '/files/manager', __DIR__ . '/files');
 
-        self::$manager = new DefaultMountManager([
+        self::$manager = new MountManager([
             'a' => new LocalFileHandler(self::$dir . '/a'),
             'b' => new LocalFileHandler(self::$dir . '/b'),
         ]);

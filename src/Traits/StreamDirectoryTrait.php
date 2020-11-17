@@ -17,11 +17,10 @@
 
 namespace Opis\FileSystem\Traits;
 
-use Opis\FileSystem\Directory\Directory;
+use Opis\FileSystem\Directory;
 
 trait StreamDirectoryTrait
 {
-
     protected ?Directory $dir = null;
 
     /**

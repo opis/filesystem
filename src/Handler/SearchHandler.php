@@ -17,7 +17,7 @@
 
 namespace Opis\FileSystem\Handler;
 
-use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\FileInfo;
 
 interface SearchHandler
 {
@@ -31,5 +31,5 @@ interface SearchHandler
      * @return iterable|FileInfo[]
      */
     public function search(string $path, string $text, ?callable $filter = null,
-                           ?array $options = null, ?int $depth = 0, ?int $limit = null): iterable;
+        ?array $options = null, ?int $depth = 0, ?int $limit = null): iterable;
 }

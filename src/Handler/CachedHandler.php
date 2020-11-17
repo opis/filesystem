@@ -19,29 +19,21 @@ namespace Opis\FileSystem\Handler;
 
 use ArrayObject;
 use Opis\Stream\Stream;
-use Opis\FileSystem\Context;
-use Opis\FileSystem\File\{Stat, FileInfo};
-use Opis\FileSystem\Cache\{MemoryCacheHandler, CacheHandler};
-use Opis\FileSystem\Directory\{ArrayDirectory, CachedDirectory, Directory};
+use Opis\FileSystem\CacheHandler\{MemoryCacheHandler};
+use Opis\FileSystem\Directory\{ArrayDirectory, CachedDirectory};
+use Opis\FileSystem\{CacheHandler, Directory, FileInfo, Stat, Context};
 
 class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, ContextHandler
 {
     /** @var FileSystemHandler|AccessHandler|SearchHandler|ContextHandler */
     protected $handler;
-
-    protected CacheHandler $cache;
-
     /** @var null|ArrayObject|FileInfo[] */
     protected ?ArrayObject $data = null;
-
+    protected CacheHandler $cache;
     protected bool $lazyDirCache = false;
-
     protected bool $ignoreLinks = true;
-
     protected bool $isContextHandler = false;
-
     protected bool $isAccessHandler = false;
-
     protected bool $isSearchHandler = false;
 
     /**
@@ -77,7 +69,7 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
     }
 
     /**
-     * @return CacheHandler
+     * @return \Opis\FileSystem\CacheHandler
      */
     public function cache(): CacheHandler
     {
@@ -95,7 +87,7 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
     }
 
     /**
-     * @param FileInfo $item
+     * @param \Opis\FileSystem\FileInfo $item
      * @return bool
      */
     public function updateCache(FileInfo $item): bool
@@ -198,7 +190,7 @@ class CachedHandler implements FileSystemHandler, AccessHandler, SearchHandler, 
 
     /**
      * @param ArrayObject $data
-     * @param FileInfo $file
+     * @param \Opis\FileSystem\FileInfo $file
      * @param FileSystemHandler $handler
      * @return ArrayObject
      */

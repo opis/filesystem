@@ -15,30 +15,34 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\Traits;
+namespace Opis\FileSystem;
 
-use Opis\FileSystem\Context;
-
-trait ContextTrait
+interface Directory
 {
-
-    protected ?Context $context = null;
+    /**
+     * @return string
+     */
+    public function path(): string;
 
     /**
-     * @inheritDoc
+     * @return string
      */
-    public function setContext(?Context $context): bool
-    {
-        $this->context = $context;
-
-        return true;
-    }
+    public function fullPath(): string;
 
     /**
-     * @inheritDoc
+     * Next item in directory
+     * @return FileInfo|null
      */
-    public function getContext(): ?Context
-    {
-        return $this->context;
-    }
+    public function next(): ?FileInfo;
+
+    /**
+     * Goes back to first item
+     * @return bool
+     */
+    public function rewind(): bool;
+
+    /**
+     * Closes the handle
+     */
+    public function close(): void;
 }

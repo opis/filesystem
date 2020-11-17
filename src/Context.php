@@ -20,28 +20,20 @@ namespace Opis\FileSystem;
 class Context
 {
     protected array $options;
-
     protected bool $blocking = false;
-
     protected int $readTimeout = 0;
-
     protected int $readMode = STREAM_BUFFER_NONE;
-
     protected int $readBuffer = 8192;
-
     protected int $writeMode = STREAM_BUFFER_NONE;
-
     protected int $writeBuffer = 8192;
-
     protected string $protocol;
-
     /** @var resource|null */
     protected $context = null;
 
     /**
      * Context constructor.
      * @param string $protocol
-     * @param null $context
+     * @param null|resource $context
      * @param array $options
      */
     public function __construct(string $protocol, $context = null, array $options = [])

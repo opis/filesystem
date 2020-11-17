@@ -18,8 +18,7 @@
 namespace Opis\FileSystem\Handler;
 
 use Opis\Stream\Stream;
-use Opis\FileSystem\Directory\Directory;
-use Opis\FileSystem\File\{FileInfo, Stat};
+use Opis\FileSystem\{FileInfo, Directory, Stat};
 
 interface FileSystemHandler
 {
@@ -27,7 +26,7 @@ interface FileSystemHandler
      * @param string $path
      * @param int $mode
      * @param bool $recursive
-     * @return null|FileInfo
+     * @return null|\Opis\FileSystem\FileInfo
      */
     public function mkdir(string $path, int $mode = 0777, bool $recursive = true): ?FileInfo;
 
@@ -47,7 +46,7 @@ interface FileSystemHandler
     /**
      * @param string $from
      * @param string $to
-     * @return null|FileInfo
+     * @return null|\Opis\FileSystem\FileInfo
      */
     public function rename(string $from, string $to): ?FileInfo;
 
@@ -55,7 +54,7 @@ interface FileSystemHandler
      * @param string $from
      * @param string $to
      * @param bool $overwrite
-     * @return null|FileInfo
+     * @return null|\Opis\FileSystem\FileInfo
      */
     public function copy(string $from, string $to, bool $overwrite = true): ?FileInfo;
 

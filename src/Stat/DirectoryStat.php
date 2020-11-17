@@ -15,25 +15,19 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\Cache;
+namespace Opis\FileSystem\Stat;
 
-use ArrayObject;
+use Opis\FileSystem\Stat;
 
-interface CacheHandler
+final class DirectoryStat extends Stat
 {
     /**
-     * @return ArrayObject|null
+     * @inheritDoc
      */
-    public function load(): ?ArrayObject;
-
-    /**
-     * @param ArrayObject $data
-     * @return bool
-     */
-    public function save(ArrayObject $data): bool;
-
-    /**
-     * @return bool
-     */
-    public function commit(): bool;
+    public function __construct(int $mode, ?int $time = null, array $info = [])
+    {
+        $info['mode'] = $mode | 0x4000;
+        $info['atime'] = $info['ctime'] = $info['mtime'] = $time;
+        parent::__construct($info);
+    }
 }

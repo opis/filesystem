@@ -15,18 +15,25 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\File;
+namespace Opis\FileSystem;
 
-final class LinkStat extends Stat
+use ArrayObject;
+
+interface CacheHandler
 {
     /**
-     * @inheritDoc
+     * @return ArrayObject|null
      */
-    public function __construct(int $mode, int $size = 0, ?int $time = null, array $info = [])
-    {
-        $info['mode'] = $mode | 0xA000;
-        $info['size'] = $size;
-        $info['atime'] = $info['ctime'] = $info['mtime'] = $time;
-        parent::__construct($info);
-    }
+    public function load(): ?ArrayObject;
+
+    /**
+     * @param ArrayObject $data
+     * @return bool
+     */
+    public function save(ArrayObject $data): bool;
+
+    /**
+     * @return bool
+     */
+    public function commit(): bool;
 }

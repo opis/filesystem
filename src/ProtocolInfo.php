@@ -28,5 +28,5 @@ interface ProtocolInfo
      * @param string|null $protocol
      * @return ProtocolInfo|static
      */
-    public function setProtocol(?string $protocol): self;
+    public function setProtocol(?string $protocol): ProtocolInfo;
 }

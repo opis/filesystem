@@ -32,8 +32,8 @@ trait PathTrait
         }
 
         if (isset($m[3])) {
-            if ($normalize) {
-                $m[3] = $this->normalizePath($m[3]);
+            if ($normalize && ($m[3] = $this->normalizePath($m[3])) === null) {
+                return null;
             }
         } else {
             $m[3] = '';

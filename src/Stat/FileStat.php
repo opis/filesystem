@@ -15,40 +15,20 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem;
+namespace Opis\FileSystem\Stat;
 
-use Opis\FileSystem\Handler\FileSystemHandler;
+use Opis\FileSystem\Stat;
 
-final class DefaultStreamPathInfo implements FileSystemStreamPathInfo
+final class FileStat extends Stat
 {
-
-    private FileSystemHandler $handler;
-
-    private string $path;
-
-    /**
-     * @param FileSystemHandler $handler
-     * @param string $path
-     */
-    public function __construct(FileSystemHandler $handler, string $path)
-    {
-        $this->handler = $handler;
-        $this->path = $path;
-    }
-
     /**
      * @inheritDoc
      */
-    public function handler(): FileSystemHandler
+    public function __construct(int $mode, int $size, ?int $time = null, array $info = [])
     {
-        return $this->handler;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function path(): string
-    {
-        return $this->path;
+        $info['mode'] = $mode | 0x8000;
+        $info['size'] = $size;
+        $info['atime'] = $info['ctime'] = $info['mtime'] = $time;
+        parent::__construct($info);
     }
 }

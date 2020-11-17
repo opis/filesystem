@@ -21,12 +21,8 @@ use Opis\Stream\Stream;
 
 trait StreamFileTrait
 {
-
     protected ?Stream $file = null;
 
-    /**
-     * @inheritDoc
-     */
     public function stream_close(): void
     {
         if ($this->file) {
@@ -34,17 +30,11 @@ trait StreamFileTrait
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function stream_eof(): bool
     {
         return $this->file ? $this->file->isEOF() : true;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function stream_open(
         string $path,
         string $mode,
@@ -59,73 +49,46 @@ trait StreamFileTrait
         return $this->file !== null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function stream_read(int $count): ?string
     {
         return $this->file ? $this->file->read($count) : null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function stream_stat(): ?array
     {
         return $this->file ? $this->file->stat() : null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function stream_tell(): ?int
     {
         return $this->file ? $this->file->tell() : null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function stream_seek(int $offset, int $whence = SEEK_SET): bool
     {
         return $this->file ? $this->file->seek($offset, $whence) : false;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function stream_flush(): bool
     {
         return $this->file ? $this->file->flush() : false;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function stream_lock(int $operation): bool
     {
         return $this->file ? $this->file->lock($operation) : false;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function stream_truncate(int $size): bool
     {
         return $this->file ? $this->file->truncate($size) : false;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function stream_write(string $data): ?int
     {
         return $this->file ? $this->file->write($data) : null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function stream_cast(
         /** @noinspection PhpUnusedParameterInspection */
         int $opt

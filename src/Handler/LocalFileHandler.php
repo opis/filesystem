@@ -17,21 +17,19 @@
 
 namespace Opis\FileSystem\Handler;
 
-use RecursiveDirectoryIterator, RecursiveIteratorIterator, FilesystemIterator;
-use Opis\Stream\{Stream, Printer\CopyPrinter};
-use Opis\FileSystem\FileStream;
+use Throwable;
 use Opis\FileSystem\Traits\SearchTrait;
-use Opis\FileSystem\File\{FileInfo, Stat};
-use Opis\FileSystem\Directory\{Directory, LocalDirectory};
+use Opis\Stream\{Stream, Printer\CopyPrinter};
+use Opis\FileSystem\Directory\LocalDirectory;
+use Opis\FileSystem\{Directory, FileInfo, FileStream, Stat};
+use RecursiveDirectoryIterator, RecursiveIteratorIterator, FilesystemIterator;
 
 class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandler
 {
     use SearchTrait;
 
     protected string $root;
-
     protected ?string $baseUrl = null;
-
     protected int $defaultMode = 0777;
 
     /**
@@ -87,7 +85,6 @@ class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandle
     public function rmdir(string $path, bool $recursive = true): bool
     {
         $path = $this->fullPath($path);
-
         if (!is_dir($path)) {
             return false;
         }
@@ -301,7 +298,7 @@ class LocalFileHandler implements FileSystemHandler, AccessHandler, SearchHandle
 
         try {
             return new FileStream($this->fullPath($path), $mode, $stat);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return null;
         }
     }

@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2019-2020 Zindex Software
+ * Copyright 2019 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 namespace Opis\FileSystem\Handler;
 
-use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\FileInfo;
 
 interface AccessHandler
 {
@@ -32,7 +32,7 @@ interface AccessHandler
     /**
      * @param string $path
      * @param int $mode
-     * @return null|FileInfo
+     * @return null|\Opis\FileSystem\FileInfo
      */
     public function chmod(string $path, int $mode): ?FileInfo;
 

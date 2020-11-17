@@ -18,27 +18,27 @@
 namespace Opis\FileSystem;
 
 use RuntimeException;
-use Opis\FileSystem\File\FileInfo;
 use Opis\FileSystem\Handler\FileSystemHandler;
 
-class StreamWrapperMountManager extends DefaultMountManager
+class StreamWrapperMountManager extends MountManager
 {
-
     protected string $protocol;
 
-    protected string $wrapperClass;
+    /** @var FileSystemStreamWrapper|string */
+    protected $wrapperClass;
 
     /**
      * @param FileSystemHandler[] $handlers
      * @param string $protocol
      * @param string $wrapper_class
      */
-    public function __construct(iterable $handlers = [], string $protocol = 'fs', string $wrapper_class = DefaultStreamWrapper::class)
+    public function __construct(array $handlers = [], string $protocol = 'fs', string $wrapper_class = FileSystemStreamWrapper::class)
     {
         parent::__construct($handlers);
 
         /** @var FileSystemStreamWrapper $wrapper_class */
-        if (!is_subclass_of($wrapper_class, FileSystemStreamWrapper::class, true)) {
+        if ($wrapper_class !== FileSystemStreamWrapper::class &&
+            !is_subclass_of($wrapper_class, FileSystemStreamWrapper::class, true)) {
             throw new RuntimeException('Invalid wrapper class ' . $wrapper_class);
         }
 
@@ -100,7 +100,7 @@ class StreamWrapperMountManager extends DefaultMountManager
             return $info;
         }
 
-        $from = $this->protocol . '://' . $proto_from . '/' . $from;;
+        $from = $this->protocol . '://' . $proto_from . '/' . $from;
         $to = $this->protocol . '://' . $proto_to . '/' . $to;
 
         if (!@rename($from, $to)) {
@@ -144,7 +144,7 @@ class StreamWrapperMountManager extends DefaultMountManager
             return $info;
         }
 
-        $from = $this->protocol . '://' . $proto_from . '/' . $from;;
+        $from = $this->protocol . '://' . $proto_from . '/' . $from;
         $to = $this->protocol . '://' . $proto_to . '/' . $to;
 
         if (!@copy($from, $to)) {

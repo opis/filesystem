@@ -17,8 +17,7 @@
 
 namespace Opis\FileSystem\Traits;
 
-use Opis\FileSystem\ProtocolInfo;
-use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\{ProtocolInfo, FileInfo};
 
 trait DirectoryFullPathTrait
 {
@@ -39,7 +38,7 @@ trait DirectoryFullPathTrait
     }
 
     /**
-     * @return FileInfo|null
+     * @return \Opis\FileSystem\FileInfo|null
      */
     abstract protected function doNext(): ?FileInfo;
 }

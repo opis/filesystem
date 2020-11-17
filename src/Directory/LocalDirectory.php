@@ -17,7 +17,7 @@
 
 namespace Opis\FileSystem\Directory;
 
-use Opis\FileSystem\File\FileInfo;
+use Opis\FileSystem\{Directory, FileInfo};
 use Opis\FileSystem\Handler\FileSystemHandler;
 use Opis\FileSystem\Traits\DirectoryFullPathTrait;
 
@@ -29,9 +29,7 @@ class LocalDirectory implements Directory
     protected $dir = false;
 
     protected FileSystemHandler $fs;
-
     protected string $path;
-
     protected string $root;
 
     /**
@@ -109,9 +107,6 @@ class LocalDirectory implements Directory
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function __destruct()
     {
         $this->close();

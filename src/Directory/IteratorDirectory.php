@@ -18,9 +18,8 @@
 namespace Opis\FileSystem\Directory;
 
 use Iterator;
-use Opis\FileSystem\File\FileInfo;
-use Opis\FileSystem\ProtocolInfo;
 use Opis\FileSystem\Traits\DirectoryFullPathTrait;
+use Opis\FileSystem\{Directory, ProtocolInfo, FileInfo};
 
 class IteratorDirectory implements Directory, ProtocolInfo
 {
@@ -28,8 +27,8 @@ class IteratorDirectory implements Directory, ProtocolInfo
 
     protected string $path;
 
-    /** @var Iterator|FileInfo[] */
-    protected ?Iterator $iterator;
+    /** @var Iterator|FileInfo[]|null */
+    protected ?Iterator $iterator = null;
 
     /**
      * @param string $path

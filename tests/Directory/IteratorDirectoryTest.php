@@ -18,9 +18,10 @@
 namespace Opis\FileSystem\Test\Directory;
 
 use ArrayIterator;
+use Opis\FileSystem\FileInfo;
 use PHPUnit\Framework\TestCase;
 use Opis\FileSystem\Directory\IteratorDirectory;
-use Opis\FileSystem\File\{DirectoryStat, FileInfo, FileStat};
+use Opis\FileSystem\Stat\{DirectoryStat, FileStat};
 
 class IteratorDirectoryTest extends TestCase
 {

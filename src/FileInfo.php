@@ -15,22 +15,20 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\FileSystem\File;
+namespace Opis\FileSystem;
 
-use JsonSerializable;
-use Opis\FileSystem\ProtocolInfo;
 use Opis\FileSystem\Traits\FullPathTrait;
 
-class FileInfo implements ProtocolInfo, JsonSerializable
+class FileInfo implements ProtocolInfo
 {
     use FullPathTrait;
 
-    private string $path;
-    private ?string $name = null;
-    private Stat $stat;
-    protected ?string $mime ;
-    protected ?string $url;
-    protected ?array $metadata ;
+    protected string $path;
+    protected ?string $name = null;
+    protected Stat $stat;
+    protected ?string $mime = null;
+    protected ?string $url = null;
+    protected ?array $metadata = null;
 
     /**
      * @param string $path
@@ -55,7 +53,7 @@ class FileInfo implements ProtocolInfo, JsonSerializable
     }
 
     /**
-     * @inheritDoc
+     * @return Stat
      */
     public function stat(): Stat
     {
@@ -63,7 +61,8 @@ class FileInfo implements ProtocolInfo, JsonSerializable
     }
 
     /**
-     * @inheritDoc
+     * File/Dir name
+     * @return string
      */
     public function name(): string
     {
@@ -76,7 +75,8 @@ class FileInfo implements ProtocolInfo, JsonSerializable
     }
 
     /**
-     * @inheritDoc
+     * Path
+     * @return string
      */
     public function path(): string
     {
@@ -84,7 +84,8 @@ class FileInfo implements ProtocolInfo, JsonSerializable
     }
 
     /**
-     * @inheritDoc
+     * Content type
+     * @return string|null
      */
     public function mime(): ?string
     {
@@ -92,7 +93,8 @@ class FileInfo implements ProtocolInfo, JsonSerializable
     }
 
     /**
-     * @inheritDoc
+     * Public URL
+     * @return string|null
      */
     public function url(): ?string
     {
@@ -100,16 +102,45 @@ class FileInfo implements ProtocolInfo, JsonSerializable
     }
 
     /**
-     * @inheritDoc
+     * Metadata
+     * @return array|null
      */
     public function metadata(): ?array
     {
         return $this->metadata;
     }
 
-    /**
-     * @inheritDoc
-     */
+    public function __serialize(): array
+    {
+        $data = [
+            'path' => $this->path,
+            'stat' => $this->stat,
+        ];
+
+        if ($this->mime !== null) {
+            $data['mime'] = $this->mime;
+        }
+
+        if ($this->url !== null) {
+            $data['url'] = $this->url;
+        }
+
+        if ($this->metadata) {
+            $data['metadata'] = $this->metadata;
+        }
+
+        return $data;
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->path = $data['path'];
+        $this->stat = $data['stat'];
+        $this->mime = $data['mime'] ?? null;
+        $this->url = $data['url'] ?? null;
+        $this->metadata = $data['metadata'] ?? null;
+    }
+
     public function jsonSerialize()
     {
         return [
